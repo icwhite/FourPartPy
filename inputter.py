@@ -14,6 +14,8 @@ class Measure:
         for i in range(num_beats):
             self.chords.append(Chord())
     def get_chord(self, ):
+        '''hiiiii'''
+        pass
 
 
 class Chord:

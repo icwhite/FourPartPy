@@ -21,3 +21,8 @@ class Measure:
 class Chord:
     '''A class representing a Chord'''
     pass
+
+
+Piece.get(1, 1, S) # first measure, first beat, soprano
+Piece.set(1, 1, S, 'C6') # first measure, first beat, soprano, is C6
+Piece.set_chord(1, 1, ['C3', 'C4', 'E4', 'G4'])

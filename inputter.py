@@ -6,6 +6,13 @@ class Piece:
         self.measures = []
         for i in range(num_measures):
             self.measures.append(Measure(num_beats))
+    def get(self, measure_num, beat_num, voice):
+        '''Piece.get(1, 1, S) -> E4 the first beat, first measures
+        soprano voice.'''
+        return self.measures[measure_num].get_chord(beat_num).voices[voice]
+
+    def set(self, measure_num, beat_num, voice, note):
+        pass
 
 class Measure:
     """each individual mearuse consists of number of chords"""
@@ -38,14 +45,16 @@ class Chord:
 
     def __init__(self, soprano=None, alto=None, tenor=None, bass=None, duration = durations['Quater']):
         assert "all has to be instance of Note class or None"
-        self.soprano = soprano
-        self.alto = alto
-        self.tenor = tenor
-        self.bass = bass
+        self.voices = {'S': soprano, 'A': alto, 'T': tenor, 'B': bass}
+        # self.soprano = soprano
+        # self.alto = alto
+        # self.tenor = tenor
+        # self.bass = bass
         self.duration = duration
 
     def __str__(self):
-        return "{0} \n{1} \n{2} \n{3}".(self.soprano, self.alto, self.tenor, self.bass) #I forgot the exact symtax lol
+        #I forgot the exact symtax lol
+        return "{0} \n{1} \n{2} \n{3}".(self.soprano, self.alto, self.tenor, self.bass)
 
 class Note:
     """A note should be in the form of new_note = Note (C, 4, #)

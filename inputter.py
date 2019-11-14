@@ -15,15 +15,18 @@ class Piece:
 
     def set(self, measure_num, beat_num, voice, note):
         '''Set the voice at measure_num, beat_num and voice corresponding
-        to the letter. 
+        to the letter.
         >>> new_piece = Piece(4, 4)
         >>> new_piece.set(1, 1, S, E4)
         >>> new_piece.get(1, 1, S)
         E4'''
         self.measure[measure_num -1].get_chord(beat_num).set_voice(voice, note)
 
+    def __str__(self):
+        pass
+
 class Measure:
-    """each individual mearuse consists of number of chords"""
+    """each individual measure consists of number of chords"""
     curr_beat = 0
     def __init__(self, beat):
         """things in it"""
@@ -38,9 +41,31 @@ class Measure:
         self.chords[place-1] = chord
         curr_beat += chord.duration
 
-
     def get_chord(index):
         return self.chord[index]
+
+    def __str__(self):
+        '''Prints out each of the chords in measure
+        >>> m = Measure(4)
+        >>> print(m)
+        [ [] [] [] []
+          [] [] [] []
+          [] [] [] []
+          [] [] [] [] ]'''
+        output = '['
+        for voice in Chord.voices:
+            for chord in self.chords:
+                note = chord.get_voice(voice)
+                if note is None:
+                    output += ' []'
+                else:
+                    output += ' ' + str(note)
+            if voice != 'B':
+                output += ' ]'
+            else:
+                output += '/n '
+
+
 
 class Chord:
     """the class creates a single chord with four notes, which are the
@@ -71,10 +96,24 @@ class Chord:
         E4'''
         self.voices[voice_letter] = note
 
+    def voice_part(self, voice_letter):
+        '''
+        >>> new_chord.voice_part('B')
+        Bass'''
+        pass
+        # should I implement this? Seems a little useless
 
     def __str__(self):
+        '''
+        >>> new_chord = Chord(C3, C4, G4, E4)
+        >>> print(new_chord)
+        C3
+        C4
+        G4
+        E4'''
         #I forgot the exact symtax lol
-        return "{0} \n{1} \n{2} \n{3}".(self.soprano, self.alto, self.tenor, self.bass)
+        return "{0} \n{1} \n{2} \n{3}".(self.voices['S'], self.voices['A'],
+            self.voices['T'], self.voices['B'])
 
 class Note:
     """A note should be in the form of new_note = Note (C, 4, #)

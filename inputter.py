@@ -7,12 +7,20 @@ class Piece:
         for i in range(num_measures):
             self.measures.append(Measure(num_beats))
     def get(self, measure_num, beat_num, voice):
-        '''Piece.get(1, 1, S) -> E4 the first beat, first measures
+        '''Return the note at measure [measure_num] and beat [beat_num]
+        and voice corresponding to the letter entered.
+        Piece.get(1, 1, S) -> E4 the first beat, first measures
         soprano voice.'''
-        return self.measures[measure_num].get_chord(beat_num).voices[voice]
+        return self.measures[measure_num -1].get_chord(beat_num).get_voice(voice)
 
     def set(self, measure_num, beat_num, voice, note):
-        pass
+        '''Set the voice at measure_num, beat_num and voice corresponding
+        to the letter. 
+        >>> new_piece = Piece(4, 4)
+        >>> new_piece.set(1, 1, S, E4)
+        >>> new_piece.get(1, 1, S)
+        E4'''
+        self.measure[measure_num -1].get_chord(beat_num).set_voice(voice, note)
 
 class Measure:
     """each individual mearuse consists of number of chords"""
@@ -23,7 +31,6 @@ class Measure:
         for i in range(num_beats):
             self.chords.append(Chord())
         self.beat = beat
-        self.chords = []
 
     def set_chord(chord, place):
         """Add a chord object """
@@ -51,6 +58,19 @@ class Chord:
         # self.tenor = tenor
         # self.bass = bass
         self.duration = duration
+
+    def get_voice(self, voice_letter):
+        '''new_chord = Chord(E4)
+        new_chord.get_voice('S') -> E4'''
+        return self.voices[voice_letter]
+
+    def set_voice(self, voice_letter, note):
+        '''new_chord = Chord()
+        >>> new_chord.set_voice('S', E4)
+        >>> new_chord.get_voice('S')
+        E4'''
+        self.voices[voice_letter] = note
+
 
     def __str__(self):
         #I forgot the exact symtax lol

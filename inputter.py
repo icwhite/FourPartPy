@@ -1,6 +1,6 @@
 # inputter
 class Piece:
-    def __init__(self, num_measures, num_beats):
+    def __init__(self, num_measures = 4, num_beats = 4, num_voices = 4):
         self.num_measures = num_measures
         self.num_beats = num_beats
         self.measures = []
@@ -23,12 +23,27 @@ class Piece:
         self.measure[measure_num -1].get_chord(beat_num).set_voice(voice, note)
 
     def __str__(self):
-        pass
+        '''Relies on the implementation of Measure.__str__()
+        new_piece = Piece()
+        >>> print(new_piece)
+        Measure 1
+        --- stuff ---
+        Measure 2
+        --- stuff ---
+        Measure 3
+        --- stuff ---
+        Measure 4
+        --- stuff ---
+        '''
+        output = ''
+        for i in range(len(self.measures)):
+            output += 'Measure {0} \n {1} \n'.format(i+1, str(self.measures[i]))
+
 
 class Measure:
     """each individual measure consists of number of chords"""
     curr_beat = 0
-    def __init__(self, beat):
+    def __init__(self, beat, num_voices = 4):
         """things in it"""
         self.chords = []
         for i in range(num_beats):
@@ -63,7 +78,7 @@ class Measure:
             if voice != 'B':
                 output += ' ]'
             else:
-                output += '/n '
+                output += '\n 1'
 
 
 

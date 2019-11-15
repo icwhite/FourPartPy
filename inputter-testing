@@ -1,0 +1,4 @@
+# testing file for inputter classes
+masterpiece = Piece()
+print(masterpiece)
+print(masterpiece)

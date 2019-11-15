@@ -6,12 +6,29 @@ class Piece:
         self.measures = []
         for i in range(num_measures):
             self.measures.append(Measure(num_beats))
+
+    def get_measure(self, measure_num):
+        '''Returns the measure corresponding to measure number
+        inputted by the user
+        >>> new_piece = Piece()
+        >>> get_measure(1)
+        --- repr for measure 1 --- '''
+        return self.measures[measure_num - 1]
+
+    def add_measure(self, measure = None):
+        '''Adds a new blank measure to Piece at the end of the piece.
+        Appends measure to self.measures'''
+        # should we scale this so you can do more
+        # complicated manipulations??
+        self.measures.append(Measure())
+
+
     def get(self, measure_num, beat_num, voice):
         '''Return the note at measure [measure_num] and beat [beat_num]
         and voice corresponding to the letter entered.
         Piece.get(1, 1, S) -> E4 the first beat, first measures
         soprano voice.'''
-        return self.measures[measure_num -1].get_chord(beat_num).get_voice(voice)
+        return self.get_measure(measure_num).get_chord(beat_num).get_voice(voice)
 
     def set(self, measure_num, beat_num, voice, note):
         '''Set the voice at measure_num, beat_num and voice corresponding
@@ -20,7 +37,7 @@ class Piece:
         >>> new_piece.set(1, 1, S, E4)
         >>> new_piece.get(1, 1, S)
         E4'''
-        self.measure[measure_num -1].get_chord(beat_num).set_voice(voice, note)
+        self.get_measure(measure_num).get_chord(beat_num).set_voice(voice, note)
 
     def __str__(self):
         '''Relies on the implementation of Measure.__str__()

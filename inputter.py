@@ -1,5 +1,6 @@
 # inputter
 class Piece:
+    '''A class representing a Piece'''
     def __init__(self, num_measures = 4, num_beats = 4, num_voices = 4):
         self.num_measures = num_measures
         self.num_beats = num_beats
@@ -60,26 +61,30 @@ class Piece:
 class Measure:
     """each individual measure consists of number of chords"""
     curr_beat = 0
-    def __init__(self, beat, num_voices = 4):
+    def __init__(self, num_beats, num_voices = 4):
         """things in it"""
         self.chords = []
-        for i in range(num_beats):
-            self.chords.append(Chord())
-        self.beat = beat
+        self.num_beats = num_beats
+        # for i in range(num_beats):
+        #     self.chords.append(Chord())
 
-    def set_chord(chord, place):
+    def add_chord(self, chord):
         """Add a chord object """
-        assert curr_beat<=beat, "Beat is out of range"
-        self.chords[place-1] = chord
-        curr_beat += chord.duration
+        assert self.curr_beat<=self.num_beats, "Beat is out of range"
+        self.chords.append(chord)
+        self.curr_beat += chord.duration
 
-    def get_chord(index):
-        return self.chord[index]
+    def get_chord(self, index):
+        assert index - 1 <= self.num_beats, "Beat is out of range"
+        assert index - 1 <= len(self.chords), "the chord at that beat\
+                                                hasn't been created yet!"
+        return self.chords[index - 1]
 
     def __str__(self):
         '''Prints out each of the chords in measure
         >>> m = Measure(4)
         >>> print(m)
+        >>> [add four chords, each with duration one in some manners]
         [ [] [] [] []
           [] [] [] []
           [] [] [] []
@@ -96,6 +101,11 @@ class Measure:
                 output += ' ]'
             else:
                 output += '\n 1'
+        lst = []
+        for chord in self.chords:
+            for voice in chord.voices:
+                pass
+                # now
 
 
 
@@ -105,9 +115,10 @@ class Chord:
        Duration is a dictionary containing quater notes, whole note, half note, etc.
        Each type corresbond with a duration, which is an integer"""
 
-    durations = {'Eighth': 0.5, 'Quater': 1, "Half": 2, 'Dotted Half': 3, "Whole": 4}
+    durations = {'Eighth': 0.5, 'Quarter': 1, "Half": 2, 'Dotted Half': 3, "Whole": 4}
+    # do we want user to input "Quarter", "Eighth", etc or 1, 0.5, etc
 
-    def __init__(self, soprano=None, alto=None, tenor=None, bass=None, duration = durations['Quater']):
+    def __init__(self, soprano=None, alto=None, tenor=None, bass=None, duration = durations['Quarter']):
         assert "all has to be instance of Note class or None"
         self.voices = {'S': soprano, 'A': alto, 'T': tenor, 'B': bass}
         # self.soprano = soprano
@@ -130,10 +141,20 @@ class Chord:
 
     def voice_part(self, voice_letter):
         '''
+        >>> new_chord = Chord(E4, G4, C4, C3)
         >>> new_chord.voice_part('B')
-        Bass'''
+        C3'''
         pass
         # should I implement this? Seems a little useless
+        # I actually don't understand the point of this method...
+        # ...oops maybe I will just leave it here and hope I remember
+
+    def voice_to_letter(self, voice_letter):
+        '''Returns the corresponding voice letter for the voice entered
+        >>> c = Chord(E4)
+        >>> c.voice_to_letter(E4)
+        S'''
+        pass
 
     def __str__(self):
         '''
@@ -144,36 +165,45 @@ class Chord:
         G4
         E4'''
         #I forgot the exact symtax lol
-        return "{0} \n{1} \n{2} \n{3}".(self.voices['S'], self.voices['A'],
+        return "{0} \n{1} \n{2} \n{3}".format(self.voices['S'], self.voices['A'],
             self.voices['T'], self.voices['B'])
 
 class Note:
     """A note should be in the form of new_note = Note (C, 4, #)
        Notes have name, octave, quality. """
 
-    qualities = {'#': 'Sharp', 'b': 'Flat', 'nat': 'Natural'}
+    # qualities = {'#': 'Sharp', 'b': 'Flat', 'nat': 'Natural'}
+    qualities = ['#', 'b', 'nat']
     available_names = ['C', 'D', 'E', 'F', 'G', 'A', 'B']
 
 
-    def __init__(self, note_name=None, octave=None, quality=qualities['nat']):
+    def __init__(self, note_name=None, octave=None, quality='nat'):
         self.note_name = note_name
-        self.ocvate = octave
+        self.octave = octave
         self.quality = quality
 
     def change_note_name(self, new_name):
-        assert new_name in available_names, "You have to put an actual note"
+        assert new_name in self.available_names, "You have to put an actual note"
         self.note_name = new_name
 
     def change_octave(self, new_octave):
-        assert new_octave is in range(1, 8), "You sure that's the right octave lol?"
+        assert new_octave in range(1, 8), "You sure that's the right octave lol?"
         self.octave = new_octave
 
-    def change_quality = (self, new_quality):
+    def change_quality(self, new_quality):
         assert new_quality in qualities, "You are too big brain for this software"
         self.quality = qualities[new_quality] #???
 
     def __str__(self):
-        return "{0} {1}". (self.note_name, self.quality)
+        '''
+        >>> n = Note('B', 4, 'b')
+        >>> print(n)
+        Bb4
+        >>> print(Note('C', 4))
+        C4 '''
+        if self.quality == 'nat':
+            return "{0}{1}".format(self.note_name, self.octave)
+        return "{0}{1}{2}".format(self.note_name, self.quality, self.octave)
 
 
 new_measure = Measure(4)
@@ -182,8 +212,9 @@ C4 = Note('C', 4)
 G4 = Note('G', 4)
 E4 = Note('E', 4)
 c_major_triad = Chord(C3, C4, G4, E4)
-measure.set_chord(c_major_triad, 1) #add the c_major_triad to the first chord in the Measure
-measure.get_chord(1) #this will return the first chord, which is an instanse of the chord object
-measure.get_chord(1).tenor = Note('B', 4, '#')
+print(c_major_triad)
+new_measure.add_chord(c_major_triad) # add the c_major_triad to the first chord in the Measure
+new_measure.get_chord(1).set_voice('T', Note('B', 4, '#'))
+new_measure.get_chord(1) #this will return the first chord, which is an instanse of the chord object
 C3.change_note_name('C')
 new_measure.chords

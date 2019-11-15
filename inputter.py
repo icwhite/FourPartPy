@@ -24,14 +24,14 @@ class Piece:
         self.measures.append(Measure())
 
 
-    def get(self, measure_num, beat_num, voice):
+    def get_voice(self, measure_num, beat_num, voice):
         '''Return the note at measure [measure_num] and beat [beat_num]
         and voice corresponding to the letter entered.
-        Piece.get(1, 1, S) -> E4 the first beat, first measures
+        Piece.get_voice(1, 1, S) -> E4 the first beat, first measures
         soprano voice.'''
         return self.get_measure(measure_num).get_chord(beat_num).get_voice(voice)
 
-    def set(self, measure_num, beat_num, voice, note):
+    def set_voice(self, measure_num, beat_num, voice, note):
         '''Set the voice at measure_num, beat_num and voice corresponding
         to the letter.
         >>> new_piece = Piece(4, 4)

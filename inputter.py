@@ -74,6 +74,9 @@ class Measure:
         self.chords.append(chord)
         self.curr_beat += chord.duration
 
+    def rm_chord(self, identifier):
+        pass
+
     def get_chord(self, index):
         assert index - 1 <= self.num_beats, "Beat is out of range"
         assert index - 1 <= len(self.chords), "the chord at that beat\
@@ -168,6 +171,10 @@ class Chord:
         return "{0} \n{1} \n{2} \n{3}".format(self.voices['S'], self.voices['A'],
             self.voices['T'], self.voices['B'])
 
+    def non_func(self, note):
+        '''Add a passing tone for an already existing chord
+        will be played OFF the beat.'''
+
 class Note:
     """A note should be in the form of new_note = Note (C, 4, #)
        Notes have name, octave, quality. """
@@ -177,10 +184,13 @@ class Note:
     available_names = ['C', 'D', 'E', 'F', 'G', 'A', 'B']
 
 
-    def __init__(self, note_name=None, octave=None, quality='nat'):
+
+    def __init__(self, note_name=None, octave=None, quality='nat',
+        non_func = False):
         self.note_name = note_name
         self.octave = octave
         self.quality = quality
+        self.non_func = non_func
 
     def change_note_name(self, new_name):
         assert new_name in self.available_names, "You have to put an actual note"
@@ -217,4 +227,3 @@ new_measure.add_chord(c_major_triad) # add the c_major_triad to the first chord 
 new_measure.get_chord(1).set_voice('T', Note('B', 4, '#'))
 new_measure.get_chord(1) #this will return the first chord, which is an instanse of the chord object
 C3.change_note_name('C')
-new_measure.chords

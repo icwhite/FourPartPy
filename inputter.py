@@ -24,14 +24,14 @@ class Piece:
         self.measures.append(Measure())
 
 
-    def get(self, measure_num, beat_num, voice):
+    def get_voice(self, measure_num, beat_num, voice):
         '''Return the note at measure [measure_num] and beat [beat_num]
         and voice corresponding to the letter entered.
-        Piece.get(1, 1, S) -> E4 the first beat, first measures
+        Piece.get_voice(1, 1, S) -> E4 the first beat, first measures
         soprano voice.'''
         return self.get_measure(measure_num).get_chord(beat_num).get_voice(voice)
 
-    def set(self, measure_num, beat_num, voice, note):
+    def set_voice(self, measure_num, beat_num, voice, note):
         '''Set the voice at measure_num, beat_num and voice corresponding
         to the letter.
         >>> new_piece = Piece(4, 4)
@@ -73,6 +73,9 @@ class Measure:
         assert self.curr_beat<=self.num_beats, "Beat is out of range"
         self.chords.append(chord)
         self.curr_beat += chord.duration
+
+    def rm_chord(self, identifier):
+        pass
 
     def get_chord(self, index):
         assert index - 1 <= self.num_beats, "Beat is out of range"
@@ -168,6 +171,10 @@ class Chord:
         return "{0} \n{1} \n{2} \n{3}".format(self.voices['S'], self.voices['A'],
             self.voices['T'], self.voices['B'])
 
+    def non_func(self, note):
+        '''Add a passing tone for an already existing chord
+        will be played OFF the beat.'''
+
 class Note:
     """A note should be in the form of new_note = Note (C, 4, #)
        Notes have name, octave, quality. """
@@ -177,10 +184,13 @@ class Note:
     available_names = ['C', 'D', 'E', 'F', 'G', 'A', 'B']
 
 
-    def __init__(self, note_name=None, octave=None, quality='nat'):
+
+    def __init__(self, note_name=None, octave=None, quality='nat',
+        non_func = False):
         self.note_name = note_name
         self.octave = octave
         self.quality = quality
+        self.non_func = non_func
 
     def change_note_name(self, new_name):
         assert new_name in self.available_names, "You have to put an actual note"

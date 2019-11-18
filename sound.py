@@ -1,4 +1,4 @@
-
+#This is just Denero's mario. I just copied and pasted it
 from wave import open
 from struct import Struct
 from math import floor

@@ -48,8 +48,9 @@ class RingBuffer:
     def __str__(self):
         return str(self.items)
 
-ring = RingBuffer(1)
-print(ring, ring.size(), ring.isEmpty(), ring.isFull())
-ring.enqueue(5)
-print(ring, ring.peek(), ring.isEmpty(), ring.isFull())
-print(ring.dequeue())
+# testing for Ring Buffer
+# ring = RingBuffer(1)
+# print(ring, ring.size(), ring.isEmpty(), ring.isFull())
+# ring.enqueue(5)
+# print(ring, ring.peek(), ring.isEmpty(), ring.isFull())
+# print(ring.dequeue())

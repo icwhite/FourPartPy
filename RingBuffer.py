@@ -54,3 +54,11 @@ class RingBuffer:
 # ring.enqueue(5)
 # print(ring, ring.peek(), ring.isEmpty(), ring.isFull())
 # print(ring.dequeue())
+
+class GuitarString:
+    def __init__():
+        print('Hellooo')
+    def __new__():
+        print('Worldddd')
+
+twang = GuitarString()

@@ -74,7 +74,7 @@ class GuitarString:
         '''Set the buffer to white noise.'''
         for i in range(self.capacity):
             self.buffer.dequeue()
-            self.buffer.enqueue(random.uniform(-0.5, 0.5))
+            self.buffer.enqueue(random.uniform(-1, 1))
 
     def tic(self):
         '''Applying the Karplus-Strong update. Delete the sample
@@ -96,10 +96,17 @@ class GuitarString:
         '''Number of times that tic was called.'''
         return self.tic_counter
 
+    def sampler(self,time):
+        '''Samples the buffer, and applies tic. This will happen every
+        time the buffer is sampled.'''
+        self.tic()
+        return self.sample()
+
+
 # testing for GuitarString
-g = GuitarString(440)
-print(g.buffer.size(),g.capacity, g.sample())
-g.pluck()
-print(g.buffer.size(), g.sample())
-g.tic()
-print(g.buffer.size(), g.sample(), g.time())
+# g = GuitarString(440)
+# print(g.buffer.size(),g.capacity, g.sample())
+# g.pluck()
+# print(g.buffer.size(), g.sample())
+# g.tic()
+# print(g.buffer.size(), g.sample(), g.time())

@@ -2,8 +2,8 @@
 from wave import open
 from struct import Struct
 from math import floor
-
-frame_rate = 11025
+from RingBuffer import *
+frame_rate = 44100
 
 def encode(x):
     """Encode float x between -1 and 1 as two bytes.
@@ -12,7 +12,7 @@ def encode(x):
     i = int(16384 * x)
     return Struct('h').pack(i)
 
-def play(sampler, name='song.wav', seconds=2):
+def play(sampler, name='guitar-testing.wav', seconds=2):
     """Write the output of a sampler function as a wav file.
     (See https://docs.python.org/3/library/wave.html)
     """
@@ -95,3 +95,6 @@ def mario_at(octave):
     return mario(c, e, g, low_g)
 
 play(both(mario_at(1), mario_at(1/2)))
+guitar = GuitarString(441)
+guitar.pluck()
+play(guitar.sampler)

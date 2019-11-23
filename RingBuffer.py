@@ -1,5 +1,6 @@
 # trying to do the one Princeton thing
-
+from random import *
+SAMPLING_RATE = 44100
 class RingBuffer:
     '''A Ring Buffer.
     The ring buffer models the medium (a string tied down at both ends)
@@ -56,9 +57,13 @@ class RingBuffer:
 # print(ring.dequeue())
 
 class GuitarString:
-    def __init__():
-        print('Hellooo')
-    def __new__():
-        print('Worldddd')
-
-twang = GuitarString()
+    '''A guitar string.'''
+    def __init__(self, frequency):
+        '''Using some equation we know that the desired capacity, n of 
+        the ring buffer is the sampling rate divided by the frequency.
+        Therefore, we create a ring buffer of that desired capacity and
+        enqueue it with n zeroes.'''
+        n = round(SAMPLING_RATE/frequency)
+        self.buffer = RingBuffer(round(SAMPLING_RATE/frequency))
+        for _ in range(n):
+            self.buffer.enqueue(0)

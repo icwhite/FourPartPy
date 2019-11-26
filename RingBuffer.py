@@ -1,5 +1,7 @@
 # trying to do the one Princeton thing
-
+import random
+SAMPLING_RATE = 44100
+ENERGY_DECAY = .994
 class RingBuffer:
     '''A Ring Buffer.
     The ring buffer models the medium (a string tied down at both ends)
@@ -32,14 +34,14 @@ class RingBuffer:
     def enqueue(self, x):
         '''Add item x to the end and increment last by 1'''
         self.items.insert(self.last, x)
-        self.last += 1
+        self.last = (self.last + 1) % self.capacity
 
     def dequeue(self):
         '''Delete and return an item from the front. Increment first.'''
-        og_val = self.items[0]
-        self.items[0] = 0
-        self.first += 1
-        return og_val
+        # og_val = self.items[0]
+        self.first = (self.first + 1) % self.capacity
+        self.items.pop()
+        # return og_val
 
     def peek(self):
         '''Return but do not delete item from front.'''
@@ -56,9 +58,55 @@ class RingBuffer:
 # print(ring.dequeue())
 
 class GuitarString:
-    def __init__():
-        print('Hellooo')
-    def __new__():
-        print('Worldddd')
+    '''A guitar string.'''
+    def __init__(self, frequency):
+        '''Using some equation we know that the desired capacity, n of
+        the ring buffer is the sampling rate divided by the frequency.
+        Therefore, we create a ring buffer of that desired capacity and
+        enqueue it with n zeroes.'''
+        self.tic_counter = 0 # keeps track of how often tic is called
+        self.capacity = round(SAMPLING_RATE/frequency)
+        self.buffer = RingBuffer(self.capacity)
+        for _ in range(self.capacity):
+            self.buffer.enqueue(0)
 
-twang = GuitarString()
+    def pluck(self):
+        '''Set the buffer to white noise.'''
+        for i in range(self.capacity):
+            self.buffer.dequeue()
+            self.buffer.enqueue(random.uniform(-1, 1))
+
+    def tic(self):
+        '''Applying the Karplus-Strong update. Delete the sample
+        at the front of the ring buffer and then add to the end of the
+        buffer the average of the first two samples multiplied by the energy
+        decay factor.'''
+        self.tic_counter += 1
+        first = self.buffer.peek()
+        self.buffer.dequeue()
+        second = self.buffer.peek()
+        new_val = (first + second)/2 * ENERGY_DECAY
+        self.buffer.enqueue(new_val)
+
+    def sample(self):
+        '''Return the first value at the beginning of the buffer.'''
+        return self.buffer.peek()
+
+    def time(self):
+        '''Number of times that tic was called.'''
+        return self.tic_counter
+
+    def sampler(self,time):
+        '''Samples the buffer, and applies tic. This will happen every
+        time the buffer is sampled.'''
+        self.tic()
+        return self.sample()
+
+
+# testing for GuitarString
+# g = GuitarString(440)
+# print(g.buffer.size(),g.capacity, g.sample())
+# g.pluck()
+# print(g.buffer.size(), g.sample())
+# g.tic()
+# print(g.buffer.size(), g.sample(), g.time())

@@ -1,11 +1,11 @@
 from inputter import *
 
 
-def convert_to_number(piece):
-    assert isinstance(piece, Piece), "input has to be of type Piece"
-    layout = str(piece)
-    for measure in layout:
-        for note in measure:
+def convert_to_number(measure):
+    assert isinstance(measure, Measure), "input has to be of type Measure"
+    layout = str(measure)
+    for chord in layout:
+        for note in chord:
             note = note.number
     return layout
 
@@ -22,6 +22,7 @@ def check_difference(list, num):
     def check_each_elem(start, lst, num):
         #check the difference of one single list
         #return a nested list of index
+        #Maybe we should move this function outside the check_difference function idk
         a_list = []
         def helper(start, lst, num):
             nonlocal a_list
@@ -44,16 +45,21 @@ def check_difference(list, num):
 
 
 def check_paralle_fifth(piece):
-    
+
     #the unfoil process
     assert isinstance(piece, Piece), 'the input has to be a list dude'
-    number_piece = convert_to_number(piece)
-    check_difference(number_piece, 4)
+    for measure in repr(piece):
+        number_piece = convert_to_number(measure) #[[1,1,3,5], [2,2,4,6]]
+        check_difference(number_piece, 4) #[[[1,4], [2,4]], [[1,4], [2,4]]]
+        #if the first list contains the same element as the one next to it, then there's a parelle fifth
+
 
 def check_paralle_octave(Piece):
     assert isinstance(piece, Piece), 'the input has to be a list dude'
-    number_piece = convert_to_number(piece)
-    check_difference(number_piece, 0)
+    for measure in repr(piece):
+        number_piece = convert_to_number(measure) #[[1,1,3,5], [2,2,4,6]]
+        check_difference(number_piece, 0) #[[[1,2]], [[1,2]]]
+        #if the first list contains the same element as the one next to it, then there's a parelle fifth
 
 def has_third(Piece):
     pass

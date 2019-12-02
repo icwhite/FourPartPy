@@ -1,12 +1,5 @@
 from inputter import *
 
-"""figure out ways to represent notes"""
-"""First, break the whole piece into little measures
-And then break each measures into notes
-Assiggn eath note with a number
-I guess there should be a dictionary
-Maybe do that in the inputter function??
-I guess each not instance has to have a number as an instance attribute"""
 
 def convert_to_number(piece):
     layout = str(piece)

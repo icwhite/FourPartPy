@@ -16,31 +16,35 @@ def check_difference(list, num):
 
     """check_each_elem([1,1,3,5], 4)
     >>>[[1,4], [2,4]]"""
-    
+
     lst_of_voices = []
+
     def check_each_elem(start, lst, num):
         #check the difference of one single list
         #return a nested list of index
-        "do stuff"
-        check_each_elem(start+1, lst[1:], num)
+        a_list = []
+        def helper(start, lst, num):
+            nonlocal a_list
+            first = lst[0]
+            rest = lst[1:]
+            if len(rest)==0:
+                return []
+            else:
+                for elem in range(rest):
+                    if rest[elem]-first == num:
+                        a_list.append([start, start+elem+1])
+                a_list.extend(check_each_elem(start+1, lst[1:], num))
+                return a_list
+        return helper(start, lst, num)
 
     for elem in list:
         lst_of_voices.append(check_each_elem(1, elem, num))
 
-
-
-
-
-
-
-
-
+    return lst_of_voices
 
 
 def check_paralle_fifth(piece):
-    """do things"""
-    """There is a piece, which is displayed as a nested list"""
-    """first, unfoil them, and then for each item, make them into their number"""
+    
     #the unfoil process
     assert isinstance(piece, Piece), 'the input has to be a list dude'
     number_piece = convert_to_number(piece)

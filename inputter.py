@@ -114,7 +114,7 @@ class Measure:
           [] [] [] []
           [] [] [] [] ]'''
         output = '['
-        for voice in Chord.voices:
+        for voice in Chord.voices: #This has to be a class attribute but now is an instance attribute
             for chord in self.chords:
                 note = chord.get_voice(voice)
                 if note is None:
@@ -203,7 +203,7 @@ class Note:
     # qualities = {'#': 'Sharp', 'b': 'Flat', 'nat': 'Natural'}
     qualities = ['#', 'b', 'nat']
     available_names = ['C', 'D', 'E', 'F', 'G', 'A', 'B']
-
+    notes_and_num = {'C': 1, 'D': 2, 'E': 3, 'F': 4, 'G':5, 'A':6, 'B':7, 'nat': 0, '#': 0.5, 'b': -0.5}
 
 
     def __init__(self, note_name=None, octave=None, quality='nat',
@@ -212,6 +212,7 @@ class Note:
         self.octave = octave
         self.quality = quality
         self.non_func = non_func
+        self.number = notes_and_num[note_name] + notes_and_num[quality]
 
     def change_note_name(self, new_name):
         assert new_name in self.available_names, "You have to put an actual note"

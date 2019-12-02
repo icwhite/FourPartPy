@@ -15,4 +15,5 @@ def user_input():
     new_piece.get_input()
     return new_piece
 
-user_input()
+user_piece = user_input()
+print (user_piece)

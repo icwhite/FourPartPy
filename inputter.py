@@ -54,7 +54,7 @@ class Piece:
         --- stuff ---
         '''
         output = ''
-        for i in range(len(self.measures)):
+        for i in range(self.num_measures):
             output += 'Measure {0} \n {1} \n'.format(i+1, str(self.measures[i]))
 
     def get_input(self):

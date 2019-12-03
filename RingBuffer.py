@@ -104,7 +104,9 @@ class GuitarString:
 
 
 # testing for GuitarString
-# g = GuitarString(440)
+g = GuitarString(440)
+g.pluck()
+print(g.sampler()
 # print(g.buffer.size(),g.capacity, g.sample())
 # g.pluck()
 # print(g.buffer.size(), g.sample())

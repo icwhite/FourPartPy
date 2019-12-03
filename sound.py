@@ -94,7 +94,8 @@ def mario_at(octave):
     low_g = tri(octave * g_freq / 2)
     return mario(c, e, g, low_g)
 
-play(both(mario_at(1), mario_at(1/2)))
+#  play(both(mario_at(1), mario_at(1/2)))
 guitar = GuitarString(441)
 guitar.pluck()
+print(guitar.sample())
 play(guitar.sampler)

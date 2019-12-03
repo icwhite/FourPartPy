@@ -56,6 +56,13 @@ class Piece:
         output = ''
         for i in range(self.num_measures):
             output += 'Measure {0} \n {1} \n'.format(i+1, str(self.measures[i]))
+        return output
+
+    def __repr__(self): #I don't really know if this is correct, but the basic idea is to put the entire piece into a nexted list
+        """putting everything into a nested list"""
+        output = []
+        output.extend(self.mearures)
+        return output
 
     def get_input(self):
         '''Get input from the user and then store that input in a Piece class'''

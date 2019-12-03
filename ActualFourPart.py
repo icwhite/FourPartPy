@@ -55,17 +55,18 @@ def check_difference(list, num):
 def check_paralle_fifth(piece):
 
     #the unfoil process
-    assert isinstance(piece, Piece), 'the input has to be a list dude'
+    assert isinstance(piece, piece), 'the input has to be a list dude'
     for measure in repr(piece):
-        number_piece = convert_to_number(measure) #[[1,1,3,5], [2,2,4,6]]
+        number_piece = expand_piece(piece) #[[1,1,3,5], [2,2,4,6]]
         check_difference(number_piece, 4) #[[[1,4], [2,4]], [[1,4], [2,4]]]
         #if the first list contains the same element as the one next to it, then there's a parelle fifth
 
 
 def check_paralle_octave(Piece):
     assert isinstance(piece, Piece), 'the input has to be a list dude'
-    for measure in repr(piece):
-        number_piece = convert_to_number(measure) #[[1,1,3,5], [2,2,4,6]]
+    number_piece = expand_piece(piece)
+    for chord in number_piece:
+         #[[1,1,3,5], [2,2,4,6]]
         check_difference(number_piece, 0) #[[[1,2]], [[1,2]]]
         #if the first list contains the same element as the one next to it, then there's a parelle fifth
 

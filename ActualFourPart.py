@@ -3,11 +3,19 @@ from inputter import *
 
 def convert_to_number(measure):
     assert isinstance(measure, Measure), "input has to be of type Measure"
-    layout = str(measure)
-    for chord in layout:
-        for note in chord:
-            note = note.number
-    return layout
+    note_numbers = []
+    for chord in measure.chords:
+        temp = []
+        for voice in chord.voices:
+            temp.append(voice.number)
+        note_numbers.append(temp)
+    return note_numbers
+
+def expand_piece(piece):
+    output_lst = []
+    for measure in piece.measures:
+        output_lst.extend(convert_to_number(measure))
+    return output_lst
 
 
 def check_difference(list, num):

@@ -111,5 +111,9 @@ def mario_at(octave):
 # play(both(mario_at(1), mario_at(1/2)))
 guitar = GuitarString(441)
 guitar.pluck()
+# make it sound better and get rid of all the static
+# for _ in range(500):
+#     guitar.sampler()
+
 # print(guitar.sample())
 play_buffer(guitar.sampler)

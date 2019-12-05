@@ -9,18 +9,3 @@ C_5 = 525.63
 ### for playing the guitar
 def pluck_guitar(note_name):
     pass
-
-def generate_equal(start, stop):
-    '''Creates all the frequencies and then stores them
-    in pitch_dict
-    >>> generate_equal('A4', 'B4')
-    >>> pitch_dict
-    {'A4': 442, 'A#4': 468.28, 'B4': 496.13}'''
-    pass
-
-def half_counter(n, m):
-    '''Counts the number of half steps in between the
-    two pitches described by n and m
-    >>> half_counter('A4', 'A#4')
-    1'''
-    note1 =

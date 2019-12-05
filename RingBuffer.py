@@ -1,6 +1,6 @@
 # trying to do the one Princeton thing
 import random
-SAMPLING_RATE = 44100
+SAMPLING_RATE = 11025
 ENERGY_DECAY = .994
 class RingBuffer:
     '''A Ring Buffer.

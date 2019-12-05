@@ -1,7 +1,7 @@
 # inputter
 class Piece:
     '''A class representing a Piece'''
-    def __init__(self, num_measures = 4, num_beats = 4, num_voices = 4):
+    def __init__(self, num_measures=4, num_beats=4, num_voices = 4):
         self.num_measures = num_measures
         self.num_beats = num_beats
         self.measures = []
@@ -208,19 +208,19 @@ class Note:
        Notes have name, octave, quality. """
 
     # qualities = {'#': 'Sharp', 'b': 'Flat', 'nat': 'Natural'}
-    qualities = ['#', 'b', 'nat']
+    qualities = ['#', 'b', '']
     available_names = ['C', 'D', 'E', 'F', 'G', 'A', 'B']
     notes_and_num = {'C': 0, 'D': 1, 'E': 2, 'F': 2.5, 'G':3.5, 'A':4.5, 'B':5.5, \
-                    'nat': 0, '#': 0.5, 'b': -0.5}
+                    '': 0, '#': 0.5, 'b': -0.5}
 
 
-    def __init__(self, note_name=None, octave=None, quality='nat',
+    def __init__(self, note_name=None, octave=None, quality='',
         non_func = False):
         self.note_name = note_name
         self.octave = octave
         self.quality = quality
         self.non_func = non_func
-        self.number = notes_and_num[note_name] + notes_and_num[quality]
+        self.number = self.notes_and_num[note_name] + self.notes_and_num[quality]
 
     def change_note_name(self, new_name):
         assert new_name in self.available_names, "You have to put an actual note"
@@ -241,7 +241,7 @@ class Note:
         Bb4
         >>> print(Note('C', 4))
         C4 '''
-        if self.quality == 'nat':
+        if self.quality == '':
             return "{0}{1}".format(self.note_name, self.octave)
         return "{0}{1}{2}".format(self.note_name, self.quality, self.octave)
 

@@ -1,6 +1,6 @@
 # trying to do the one Princeton thing
 import random
-SAMPLING_RATE = 44100
+SAMPLING_RATE = 11025
 ENERGY_DECAY = .994
 class RingBuffer:
     '''A Ring Buffer.
@@ -40,7 +40,9 @@ class RingBuffer:
         '''Delete and return an item from the front. Increment first.'''
         # og_val = self.items[0]
         self.first = (self.first + 1) % self.capacity
-        self.items.pop()
+        x = self.items[0]
+        self.items = self.items[1:]
+        return x
         # return og_val
 
     def peek(self):
@@ -74,7 +76,7 @@ class GuitarString:
         '''Set the buffer to white noise.'''
         for i in range(self.capacity):
             self.buffer.dequeue()
-            self.buffer.enqueue(random.uniform(-1, 1))
+            self.buffer.enqueue(random.uniform(-0.5, 0.5))
 
     def tic(self):
         '''Applying the Karplus-Strong update. Delete the sample
@@ -96,7 +98,7 @@ class GuitarString:
         '''Number of times that tic was called.'''
         return self.tic_counter
 
-    def sampler(self,time):
+    def sampler(self):
         '''Samples the buffer, and applies tic. This will happen every
         time the buffer is sampled.'''
         self.tic()
@@ -104,9 +106,17 @@ class GuitarString:
 
 
 # testing for GuitarString
-g = GuitarString(440)
-g.pluck()
-print(g.sampler()
+b = RingBuffer(100)
+for i in range(100):
+    b.enqueue(i)
+print(b.peek())
+print(b.dequeue())
+print(b.dequeue())
+
+# g = GuitarString(440)
+# g.pluck()
+# for _ in range(10):
+#     print(g.sampler())
 # print(g.buffer.size(),g.capacity, g.sample())
 # g.pluck()
 # print(g.buffer.size(), g.sample())

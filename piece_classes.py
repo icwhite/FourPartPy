@@ -1,7 +1,7 @@
 # inputter
 class Piece:
     '''A class representing a Piece'''
-    def __init__(self, num_measures = 4, num_beats = 4, num_voices = 4):
+    def __init__(self, num_measures=4, num_beats=4, num_voices = 4):
         self.num_measures = num_measures
         self.num_beats = num_beats
         self.measures = []
@@ -208,19 +208,23 @@ class Note:
        Notes have name, octave, quality. """
 
     # qualities = {'#': 'Sharp', 'b': 'Flat', 'nat': 'Natural'}
-    qualities = ['#', 'b', 'nat']
+    qualities = ['#', 'b', '']
     available_names = ['C', 'D', 'E', 'F', 'G', 'A', 'B']
-    notes_and_num = {'C': 0, 'D': 1, 'E': 2, 'F': 2.5, 'G':3.5, 'A':4.5, 'B':5.5, \
-                    'nat': 0, '#': 0.5, 'b': -0.5}
+    notes_and_num = {'C': 0, 'D': 2, 'E': 4, 'F': 5, 'G':7, 'A':9, 'B':11, \
+                    '': 0, '#': 1, 'b': -1}
+    pitch_dict = {}
 
 
-    def __init__(self, note_name=None, octave=None, quality='nat',
+
+    def __init__(self, note_name=None, octave=None, quality='',
         non_func = False):
         self.note_name = note_name
         self.octave = octave
         self.quality = quality
         self.non_func = non_func
-        self.number = notes_and_num[note_name] + notes_and_num[quality]
+        self.number = self.notes_and_num[note_name] + \
+                    self.notes_and_num[quality] + \
+                    self.octave * 12
 
     def change_note_name(self, new_name):
         assert new_name in self.available_names, "You have to put an actual note"
@@ -241,20 +245,68 @@ class Note:
         Bb4
         >>> print(Note('C', 4))
         C4 '''
-        if self.quality == 'nat':
+        if self.quality == '':
             return "{0}{1}".format(self.note_name, self.octave)
         return "{0}{1}{2}".format(self.note_name, self.quality, self.octave)
 
+    def generate_equal(self):
+        '''Creates all the frequencies and then stores them
+        in pitch_dict
+        >>> generate_equal('A4', 'B4')
+        >>> pitch_dict
+        {'A4': 442, 'A#4': 468.28, 'B4': 496.13}'''
+        A4 = Note('A4')
+        C2 = Note('C2')
+        C5 = Note('C5')
+        to_C2 = A4.number - C2.number
+        to_C5 = C5.number - A4.number
+        for half in range(to_C2):
+            # store frequency and name in pitch_dict
+            pass
 
-new_measure = Measure(4)
-C3 = Note('C', 3)
-C4 = Note('C', 4)
-G4 = Note('G', 4)
-E4 = Note('E', 4)
-c_major_triad = Chord(C3, C4, G4, E4)
-print(c_major_triad)
-new_measure.add_chord(c_major_triad) # add the c_major_triad to the first chord in the Measure
-new_measure.get_chord(1).set_voice('T', Note('B', 4, '#'))
-new_measure.get_chord(1) #this will return the first chord, which is an instanse of the chord object
-C3.change_note_name('C')
-new_measure.chords
+    def number_to_note(self, n):
+        '''Convert a number to a note value where C1 is 0.
+        Warning! Sometimes returns two values!!
+        >>> n = Note('A4')
+        >>> self.number_to_note(0)
+        C1
+        >>> self.number_to_note(1)
+        C#1, Db1'''
+        octave_num = n // 12 + 1
+        for key in self.notes_and_num:
+            if self.notes_and_num[key] == n and n != 1:
+                return key + str(octave_num)
+        sharp = ''
+        flat = ''
+        for key in self.notes_and_num:
+            if self.notes_and_num[key] == (n - 1) % 12:
+                sharp += key + '#' + str(octave_num)
+            elif self.notes_and_num[key] == (n + 1) % 12:
+                flat += key + 'b' + str(octave_num)
+        return sharp, flat
+
+    def half_counter(n, m):
+        '''Counts the number of half steps in between the
+        two pitches described by Note objects n and m
+        >>> half_counter('A4', 'A#4')
+        1'''
+        note1 = Note(n)
+        note2 = Note(m)
+        return note1.number - note2.number
+
+
+# new_measure = Measure(4)
+# C3 = Note('C', 3)
+# C4 = Note('C', 4)
+# G4 = Note('G', 4)
+# E4 = Note('E', 4)
+# c_major_triad = Chord(C3, C4, G4, E4)
+# print(c_major_triad)
+# new_measure.add_chord(c_major_triad) # add the c_major_triad to the first chord in the Measure
+# new_measure.get_chord(1).set_voice('T', Note('B', 4, '#'))
+# new_measure.get_chord(1) #this will return the first chord, which is an instanse of the chord object
+# C3.change_note_name('C')
+# new_measure.chords
+n = Note('A', 4, '#' )
+for i in range(14):
+    print(Note.number_to_note(n, i))

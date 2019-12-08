@@ -1,0 +1,11 @@
+from sound import *
+from inputter import *
+
+pitch_dict = {}
+A_4 = 442 # the frequency of A above middle C
+half_step = 2 ** -12
+C_2 = 65.70
+C_5 = 525.63
+### for playing the guitar
+def pluck_guitar(note_name):
+    pass

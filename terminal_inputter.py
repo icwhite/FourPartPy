@@ -1,5 +1,5 @@
 # testing file for inputter classes
-from inputter import *
+from piececlasses import *
 # from inputter-func import *
 # masterpiece = Piece()
 # print(masterpiece)
@@ -16,4 +16,4 @@ def user_input():
     return new_piece
 
 user_piece = user_input()
-print (user_piece)
+# print (user_piece)

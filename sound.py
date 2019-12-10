@@ -109,19 +109,15 @@ def mario_at(octave):
     return mario(c, e, g, low_g)
 
 
-### for playing the guitar
-def pluck_guitar(note_name):
-    pass
 
-def 
 
 
 # play(both(mario_at(1), mario_at(1/2)))
-guitar = GuitarString(441)
-guitar.pluck()
-# make it sound better and get rid of all the static
-for _ in range(5000):
-    guitar.sampler()
-
-# print(guitar.sample())
-play_buffer(guitar.sampler)
+# guitar = GuitarString(441)
+# guitar.pluck()
+# # make it sound better and get rid of all the static
+# for _ in range(5000):
+#     guitar.sampler()
+#
+# # print(guitar.sample())
+# play_buffer(guitar.sampler)

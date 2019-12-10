@@ -225,6 +225,7 @@ class Note:
         self.number = self.notes_and_num[note_name] + \
                     self.notes_and_num[quality] + \
                     self.octave * 12
+        # self.frequency = self.pitch_dict[self]
 
     def change_note_name(self, new_name):
         assert new_name in self.available_names, "You have to put an actual note"
@@ -249,22 +250,24 @@ class Note:
             return "{0}{1}".format(self.note_name, self.octave)
         return "{0}{1}{2}".format(self.note_name, self.quality, self.octave)
 
-    def generate_equal(self):
+    def generate_equal():
         '''Creates all the frequencies and then stores them
         in pitch_dict
         >>> generate_equal('A4', 'B4')
         >>> pitch_dict
         {'A4': 442, 'A#4': 468.28, 'B4': 496.13}'''
-        A4 = Note('A4')
-        C2 = Note('C2')
-        C5 = Note('C5')
-        to_C2 = A4.number - C2.number
-        to_C5 = C5.number - A4.number
-        for half in range(to_C2):
+        A4_num = 45
+        C2_num = 12
+        C5_num = 48
+        scalar = 2 ** (1/12)
+        for num in range(C2_num, C5_num + 1):
             # store frequency and name in pitch_dict
-            pass
+            frequency = 442 * scalar ** (num - A4_num)
+            notes = Note.number_to_note(num)
+            for note in notes:
+                Note.pitch_dict[note] = frequency
 
-    def number_to_note(self, n):
+    def number_to_note(n):
         '''Convert a number to a note value where C1 is 0.
         Warning! Sometimes returns two values!!
         >>> n = Note('A4')
@@ -273,17 +276,21 @@ class Note:
         >>> self.number_to_note(1)
         C#1, Db1'''
         octave_num = n // 12 + 1
-        for key in self.notes_and_num:
-            if self.notes_and_num[key] == n and n != 1:
-                return key + str(octave_num)
-        sharp = ''
-        flat = ''
-        for key in self.notes_and_num:
-            if self.notes_and_num[key] == (n - 1) % 12:
-                sharp += key + '#' + str(octave_num)
-            elif self.notes_and_num[key] == (n + 1) % 12:
-                flat += key + 'b' + str(octave_num)
-        return sharp, flat
+        for key in Note.notes_and_num:
+            if Note.notes_and_num[key] == n % 12 and n % 12 != 1:
+                return [Note(key, octave_num)]
+        # sharp = ''
+        # flat = ''
+        for key in Note.notes_and_num:
+            if Note.notes_and_num[key] == (n - 1) % 12 \
+                and key != '#' and key != '':
+                sharp = Note(key, octave_num, '#')
+                # sharp += key + '#' + str(octave_num)
+            elif Note.notes_and_num[key] == (n + 1) % 12\
+                and key != '#' and key != '':
+                flat = Note(key, octave_num, 'b')
+                # flat += key + 'b' + str(octave_num)
+        return [sharp, flat]
 
     def half_counter(n, m):
         '''Counts the number of half steps in between the
@@ -293,6 +300,9 @@ class Note:
         note1 = Note(n)
         note2 = Note(m)
         return note1.number - note2.number
+
+    def frequency(self):
+        return self.pitch_dict[self]
 
 
 # new_measure = Measure(4)
@@ -307,6 +317,10 @@ class Note:
 # new_measure.get_chord(1) #this will return the first chord, which is an instanse of the chord object
 # C3.change_note_name('C')
 # new_measure.chords
-n = Note('A', 4, '#' )
-for i in range(14):
-    print(Note.number_to_note(n, i))
+
+# for i in range(20):
+#     print(Note.number_to_note(n, i))
+# print(Note.pitch_dict)
+Note.generate_equal()
+for key in Note.pitch_dict:
+    print(key, Note.pitch_dict[key])

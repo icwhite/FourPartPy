@@ -1,4 +1,4 @@
-from inputter import *
+`from inputter import *
 
 
 def convert_to_number(measure):
@@ -31,7 +31,7 @@ def check_each_elem(start, lst, num):
             return []
         else:
             for elem in range(rest):
-                if rest[elem]-first == num:
+                if rest[elem]-first == num and first!="*" or rest!="*":
                     a_list.append([start, start+elem+1, first, rest[elem]])
             a_list.extend(check_each_elem(start+1, lst[1:], num))
             return a_list
@@ -51,25 +51,52 @@ def check_difference(list, num):
 
     return lst_of_voices
 
+def remove_common_tone(piece):
+    """cadential_six_four = [[5, 5, 1, 3], [5, 5, 7, 2]]
+    >>>[[*, *, 1, 3], [5, 5, 7, 2]]"""
+    result = expand_piece(piece)
+    for i in range(result):
+        voice = 0
+        while voice<4:
+            if result[i][voice]==result[i+1][voice]:
+                result[i][voice]="*"
+            voice+=1
+    return result
 
-def check_paralle_fifth(piece):
 
-    #the unfoil process
-    assert isinstance(piece, piece), 'the input has to be a list dude'
-    number_piece = expand_piece(piece)
-    for measure in number_piece:
-        new_piece = #delete all the common intervals
-        check_difference(new_piece, 4) #[[[1,4], [2,4]], [[1,4], [2,4]]]
-        #if the first list contains the same element as the one next to it, then there's a parelle fifth
+def check_and_print(voices_list, statement):
+    #this part if very bad, I'm gonna fix this alter
+    voice_num={1: soprano, 2: alto, 3: tenor, 4: bass}
+    for chord in range(voices_list):
+        first, second = voices_list[chord], voices_list[chord+1]
+        min_len = min(len(first), len(second))
+        for j in range(min_len):
+            if first[j]==second[j]:
+                first_voice, scond_voice = voice_num[first[j]], voice_num[second[j]]
+                print ("there is a {0} fifth between {1}, and {2} between chord No.{3} and chord No.{4}". format(statement, first_voice, set_voice, chord, chord+1))
 
+
+def check_intervals(Piece, num):
+    assert isinstance(piece, Piece), 'the input has to be a list dude'
+    number_piece_expanded = expand_piece(piece)
+    voices_with_interval = []
+    for chord in remove_common_tone(number_piece_expanded):
+        voices_with_octave.append(check_difference(number_piece_expanded, num))
+    return voices_with_interval
+
+
+def check_paralle_fifth(Piece):
+    result = check_intervals(Piece, 4)
+    check_and_print(result, "fifth")
 
 def check_paralle_octave(Piece):
-    assert isinstance(piece, Piece), 'the input has to be a list dude'
-    number_piece = expand_piece(piece)
-    for chord in number_piece:
-         #[[1,1,3,5], [2,2,4,6]]
-        check_difference(number_piece, 0) #[[[1,2]], [[1,2]]]
-        #if the first list contains the same element as the one next to it, then there's a parelle fifth
+    result = check_intervals(Piece, 0)
+    check_and_print(result, "octave")
+
+
 
 def has_third(Piece):
-    pass
+    result = check_intervals(Piece, 2)
+    for chords in range(result):
+        if len(chord)==0:
+            print ("No thirds in chord No.{0}!". format(chord))

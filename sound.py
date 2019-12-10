@@ -23,6 +23,7 @@ def play(sampler, name='pluck-guitar.wav', seconds=2):
     t = 0
     while t < seconds * frame_rate:
         sample = sampler(t)
+        # print(sample)
         # if not t % 100:
         #     print(sample)
         out.writeframes(encode(sample))

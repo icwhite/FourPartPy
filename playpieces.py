@@ -10,7 +10,6 @@ C_5 = 525.63
 guitarstrings = {}
 for note in Note.pitch_dict:
     guitarstrings[note] = GuitarString(Note.pitch_dict[note])
-    print('added', note)
 ### for playing the guitar
 def pluck_guitar(note, start, end):
     '''Takes in a note object and a duration and plucks the guitar
@@ -23,14 +22,14 @@ def pluck_guitar(note, start, end):
         string.sampler()
     def sampler(t):
         seconds = t/frame_rate
-        print(seconds)
-        if seconds < start:
-            return 0
-        elif seconds > end:
-            return 0
-        else:
-            return string.sampler()
+        # if seconds < start:
+        #     return 0
+        # elif seconds > end:
+        #     return 0
+        # else:
+        return string.sampler()
     return sampler
 
 A4_sampler = pluck_guitar(A_4, 0.5, 3)
-play(A4_sampler)
+print(A4_sampler)
+play(A4_sampler, "struggles.wav")

@@ -1,4 +1,4 @@
-`from inputter import *
+`from piece_classes import *
 
 
 def convert_to_number(measure):

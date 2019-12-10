@@ -12,7 +12,7 @@ def encode(x):
     i = int(16384 * x)
     return Struct('h').pack(i)
 
-def play(sampler, name='song.wav', seconds=2):
+def play(sampler, name='pluck-guitar.wav', seconds=2):
     """Write the output of a sampler function as a wav file.
     (See https://docs.python.org/3/library/wave.html)
     """
@@ -70,7 +70,7 @@ def note(f, start, end, fade=.01):
             return f(t)
     return sampler
 
-play(note(tri(e_freq), 1, 1.5))
+# play(note(tri(e_freq), 1, 1.5))
 
 def both(f, g):
     return lambda t: f(t) + g(t)
@@ -80,9 +80,9 @@ e = tri(e_freq)
 g = tri(g_freq)
 low_g = tri(g_freq / 2)
 
-play(both(note(e, 0, 1/8), note(low_g, 1/8, 3/8)))
+# play(both(note(e, 0, 1/8), note(low_g, 1/8, 3/8)))
 
-play(both(note(c, 0, 1), both(note(e, 0, 1), note(g, 0, 1))))
+# play(both(note(c, 0, 1), both(note(e, 0, 1), note(g, 0, 1))))
 
 def mario(c, e, g, low_g):
     z = 0

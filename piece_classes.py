@@ -258,9 +258,9 @@ class Note:
         {'A4': 442, 'A#4': 468.28, 'B4': 496.13}'''
         A4_num = 45
         C2_num = 12
-        C5_num = 48
+        C6_num = 60
         scalar = 2 ** (1/12)
-        for num in range(C2_num, C5_num + 1):
+        for num in range(C2_num, C6_num + 1):
             # store frequency and name in pitch_dict
             frequency = 442 * scalar ** (num - A4_num)
             notes = Note.number_to_note(num)
@@ -278,17 +278,17 @@ class Note:
         octave_num = n // 12 + 1
         for key in Note.notes_and_num:
             if Note.notes_and_num[key] == n % 12 and n % 12 != 1:
-                return [Note(key, octave_num)]
+                return [str(Note(key, octave_num))]
         # sharp = ''
         # flat = ''
         for key in Note.notes_and_num:
             if Note.notes_and_num[key] == (n - 1) % 12 \
                 and key != '#' and key != '':
-                sharp = Note(key, octave_num, '#')
+                sharp = str(Note(key, octave_num, '#'))
                 # sharp += key + '#' + str(octave_num)
             elif Note.notes_and_num[key] == (n + 1) % 12\
                 and key != '#' and key != '':
-                flat = Note(key, octave_num, 'b')
+                flat = str(Note(key, octave_num, 'b'))
                 # flat += key + 'b' + str(octave_num)
         return [sharp, flat]
 

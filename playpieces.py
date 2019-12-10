@@ -3,22 +3,34 @@ from piece_classes import *
 
 Note.generate_equal()
 pitch_dict = Note.pitch_dict
-A_4 = Note('A', 4)# the frequency of A above middle C
+A_4 = str(Note('A', 4))
 half_step = 2 ** -12
 C_2 = 65.70
 C_5 = 525.63
 guitarstrings = {}
 for note in Note.pitch_dict:
     guitarstrings[note] = GuitarString(Note.pitch_dict[note])
+    print('added', note)
 ### for playing the guitar
-def pluck_guitar(note):
-    def sampler2():
-        string = guitarstrings[note]
-        string.pluck()
-        for _ in range(5000):
-            string.sampler()
-        return string.sampler()
-    return sampler2
+def pluck_guitar(note, start, end):
+    '''Takes in a note object and a duration and plucks the guitar
+    with its frequency. Start is the time that you want the guitar to be
+    plucked and end is when you want the sound to cut out.'''
+    string = guitarstrings[str(note)]
+    # get rid of all the white noise
+    string.pluck()
+    for _ in range(5000):
+        string.sampler()
+    def sampler(t):
+        seconds = t/frame_rate
+        print(seconds)
+        if seconds < start:
+            return 0
+        elif seconds > end:
+            return 0
+        else:
+            return string.sampler()
+    return sampler
 
-A4_sampler = pluck_guitar(A_4)
-play_buffer(A4_sampler)
+A4_sampler = pluck_guitar(A_4, 0.5, 3)
+play(A4_sampler)

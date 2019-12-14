@@ -3,7 +3,7 @@ from wave import open
 from struct import Struct
 from math import floor
 from RingBuffer import *
-frame_rate = 11025
+frame_rate = 44100
 
 def encode(x):
     """Encode float x between -1 and 1 as two bytes.
@@ -18,27 +18,29 @@ def play(sampler, name='pluck-guitar.wav', seconds=2):
     """
     out = open(name, 'wb')
     out.setnchannels(1)
-    out.setsampwidth(2)
+    out.setsampwidth(1)
     out.setframerate(frame_rate)
     t = 0
     while t < seconds * frame_rate:
         sample = sampler(t)
         # print(sample)
-        # if not t % 100:
-        #     print(sample)
+        if not t % 1000:
+            print(sample)
         out.writeframes(encode(sample))
         t = t + 1
     out.close()
 
-def play_buffer(b_sampler, name="guitar-testing.wav", seconds=3):
+def play_buffer(b_sampler, name="guitar-testing.wav", seconds=2):
     '''Write the ouput of a sampler function as a wave file, but
     for a sampler funtion that generates from a buffer.'''
     out = open(name, 'wb')
     out.setnchannels(1)
     out.setsampwidth(1)
     out.setframerate(frame_rate)
-    for _ in range(frame_rate):
+    for t in range(seconds * frame_rate):
         sample = b_sampler()
+        if not t % 1000:
+            print(sample)
         out.writeframes(encode(sample))
     out.close()
 
@@ -53,7 +55,7 @@ def tri(frequency, amplitude=0.3):
 
 c_freq, e_freq, g_freq = 261.63, 329.63, 392.00
 
-play(tri(e_freq))
+# play(tri(e_freq))
 
 def note(f, start, end, fade=.01):
     """Play f for a fixed duration."""
@@ -117,7 +119,7 @@ def mario_at(octave):
 # guitar = GuitarString(441)
 # guitar.pluck()
 # # make it sound better and get rid of all the static
-# for _ in range(5000):
+# for _ in range(500):
 #     guitar.sampler()
 #
 # # print(guitar.sample())

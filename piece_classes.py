@@ -321,6 +321,6 @@ class Note:
 # for i in range(20):
 #     print(Note.number_to_note(n, i))
 # print(Note.pitch_dict)
-Note.generate_equal()
-for key in Note.pitch_dict:
-    print(key, Note.pitch_dict[key])
+# Note.generate_equal()
+# for key in Note.pitch_dict:
+#     print(key, Note.pitch_dict[key])

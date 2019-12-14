@@ -1,7 +1,8 @@
 # trying to do the one Princeton thing
 import random
-SAMPLING_RATE = 11025
-ENERGY_DECAY = .994
+from math import floor
+SAMPLING_RATE = 44100
+ENERGY_DECAY = .999
 class RingBuffer:
     '''A Ring Buffer.
     The ring buffer models the medium (a string tied down at both ends)
@@ -73,10 +74,11 @@ class GuitarString:
             self.buffer.enqueue(0)
 
     def pluck(self):
-        '''Set the buffer to white noise.'''
+        '''Set the buffer to a sine wave with the necessary frequency.'''
         for i in range(self.capacity):
             self.buffer.dequeue()
-            self.buffer.enqueue(random.uniform(-0.5, 0.5))
+            self.buffer.enqueue(i / self.capacity - \
+                                floor(i / self.capacity + 0.5))
 
     def tic(self):
         '''Applying the Karplus-Strong update. Delete the sample
@@ -106,12 +108,12 @@ class GuitarString:
 
 
 # testing for GuitarString
-b = RingBuffer(100)
-for i in range(100):
-    b.enqueue(i)
-print(b.peek())
-print(b.dequeue())
-print(b.dequeue())
+# b = RingBuffer(100)
+# for i in range(100):
+#     b.enqueue(i)
+# print(b.peek())
+# print(b.dequeue())
+# print(b.dequeue())
 
 # g = GuitarString(440)
 # g.pluck()

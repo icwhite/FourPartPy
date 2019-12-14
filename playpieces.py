@@ -18,8 +18,9 @@ def pluck_guitar(note, start, end):
     string = guitarstrings[str(note)]
     # get rid of all the white noise
     string.pluck()
-    for _ in range(5000):
-        string.sampler()
+    # for _ in range(5000):
+    #     string.sampler()
+    print('hi!!')
     def sampler(t):
         seconds = t/frame_rate
         # if seconds < start:
@@ -29,7 +30,11 @@ def pluck_guitar(note, start, end):
         # else:
         return string.sampler()
     return sampler
+    # sampler = lambda x: string.sampler()
+    # return string.sampler
 
-A4_sampler = pluck_guitar(A_4, 0.5, 3)
-print(A4_sampler)
+C2_sampler = pluck_guitar('C2', 0.5, 3)
+A4_sampler = pluck_guitar('A4', 0.5, 3)
+# print(A4_sampler)
 play(A4_sampler, "struggles.wav")
+print(guitarstrings['A4'].tic_counter)

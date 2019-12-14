@@ -168,6 +168,7 @@ def run_it():
             start = False
             return "OK BYE"
         new_piece.get_input()
+        #here goes soemthing that allows the guitar to play
         has_third(new_piece)
         leading_tone_doubled(new_piece)
         seventh_resolved_down(new_piece)

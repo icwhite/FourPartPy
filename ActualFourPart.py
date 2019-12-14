@@ -151,7 +151,7 @@ def seventh_resolved_down(piece):
             i = curr_chord.index(seventh)
             diff = curr_chord[i] - next(second)[i]
             if diff!=2 or diff!=1:
-                print ("your seventh in chord No. {} is not resolved down by step!{}".format(chord_count, curr_chord))
+                print ("your seventh in chord No. {0} is not resolved down by step!{1}".format(chord_count, curr_chord))
         chord_count+=1
         next(curr)
         next(second)

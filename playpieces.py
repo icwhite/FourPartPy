@@ -63,6 +63,7 @@ def chord_sampler(chord, start, end):
 
 def piece_sampler(piece):
     '''Takes in a piece instance and then plays the music. :)'''
+    pass
 
 
 C3_sampler = pluck_guitar('C3', 0.5, 3)

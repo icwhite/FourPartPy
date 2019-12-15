@@ -47,20 +47,17 @@ def check_each_elem(start, lst, num):
 
     a_list = []
     def helper(start, lst):
-        print(lst)
         nonlocal a_list
         first = lst[0]
         rest = lst[1:]
         if len(rest)==0:
-            return []
+            return a_list
         else:
             for elem in range(len(rest)):
-                if rest[elem]-first == num and (first!='*' or rest!='*'):
-                    print("a parallel")
+                if rest[elem]-first == num: #and (first!='*' or rest!='*'):
                     a_list.append([start, start+elem+1])
             a_list.extend(helper(start+1, lst[1:]))
             return a_list
-    print(a_list)
     return helper(start, lst)
 
 
@@ -89,8 +86,9 @@ def check_and_print(voices_list, statement):
         min_len = min(len(first), len(second))
         for j in range(min_len):
             if first[j]==second[j]:
-                first_voice, scond_voice = voice_num[first[j]], voice_num[second[j]]
-                print ("there is a parallel {0} between {1}, and {2} between chord No.{3} and chord No.{4}". format(statement, first_voice, set_voice, chord, chord+1))
+                #first_voice, scond_voice = voice_num[first[j]], voice_num[second[j]]
+                print ("there is a parallel {0} between chord No.{1} and chord No.{2}". format(statement, chord+1, chord+2))
+                return None
 
 
 def check_paralle_fifth(piece):
@@ -132,7 +130,7 @@ def leading_tone_doubled(piece):
     assert isinstance(piece, Piece), "the input has to be a piece!"
     expanded = expand_piece(piece)
     root = min(expanded[0])
-    if root ==1:
+    if root ==0:
         leading = 11
     else:
         leading = root-1
@@ -140,7 +138,7 @@ def leading_tone_doubled(piece):
         curr_chord = 0
         leading_count = chord.count(leading)
         if leading_count>1:
-            print ("you doubled the leading tone in chord No. {0}! {1}".format(curr_chord, chord))
+            print ("you doubled the leading tone in chord No. {0}! {1}".format(curr_chord+1, chord))
 
 def is_seventh(chord_in_num_form):
     seventh = find_seventh(chord_in_num_form)
@@ -149,7 +147,7 @@ def is_seventh(chord_in_num_form):
     return False
 
 def find_seventh(chord_in_num_form):
-    root = min(chord)
+    root = min(chord_in_num_form)
     if root == 1:
         return 11
     else:
@@ -158,6 +156,8 @@ def find_seventh(chord_in_num_form):
 def seventh_resolved_down(piece):
     """check each seventh chord in a piece whether or not the seventh is resolved down by step"""
     expanded = expand_piece(piece)
+    if len(expanded)==1:
+        return None
     curr, second = iter(expanded), iter(expanded)
     next(second)
     while curr:
@@ -168,7 +168,7 @@ def seventh_resolved_down(piece):
             i = curr_chord.index(seventh)
             diff = curr_chord[i] - next(second)[i]
             if diff!=2 or diff!=1:
-                print ("your seventh in chord No. {0} is not resolved down by step!{1}".format(chord_count, curr_chord))
+                print ("your seventh in chord No. {0} is not resolved down by step!{1}".format(chord_count+1, curr_chord))
         chord_count+=1
         next(curr)
         next(second)
@@ -188,7 +188,7 @@ def run_it():
         new_piece.get_input()
         #here goes soemthing that allows the guitar to play
         has_third(new_piece)
-        #leading_tone_doubled(new_piece)
+        leading_tone_doubled(new_piece)
         #seventh_resolved_down(new_piece)
         check_paralle_fifth(new_piece)
         check_paralle_octave(new_piece)

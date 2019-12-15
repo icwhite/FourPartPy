@@ -12,8 +12,9 @@ def convert_to_number(measure):
     for chord in measure.chords:
         temp = []
         for voice in list(chord.voices.values()): #each voice is an instance of the class Note
-            temp.append(voice.number)
+            temp.append(voice.number%12)
         note_numbers.append(temp)
+    print(note_numbers)
     return note_numbers
 
 def expand_piece(piece):
@@ -27,9 +28,11 @@ def remove_common_tone(piece):
     >>>[[*, *, 1, 3], [5, 5, 7, 2]]"""
     assert isinstance(piece, Piece), "the input has to be an instance of Piece"
     result = expand_piece(piece) #here the piece is expanded
-    for i in range(result):
+    if len(result)==1:
+        return result
+    for i in range(len(result)-1):
         voice = 0
-        while voice<4:
+        while voice<3:
             if result[i][voice]==result[i+1][voice]:
                 result[i][voice]="*"
             voice+=1
@@ -44,17 +47,20 @@ def check_each_elem(start, lst, num):
 
     a_list = []
     def helper(start, lst):
+        print(lst)
         nonlocal a_list
         first = lst[0]
         rest = lst[1:]
         if len(rest)==0:
             return []
         else:
-            for elem in range(rest):
-                if round(rest[elem]-first) == num and first!="*" or rest!="*":
-                    a_list.append([start, start+elem+1, first, rest[elem]])
-            a_list.extend(check_each_elem(start+1, lst[1:], num))
+            for elem in range(len(rest)):
+                if rest[elem]-first == num and (first!='*' or rest!='*'):
+                    print("a parallel")
+                    a_list.append([start, start+elem+1])
+            a_list.extend(helper(start+1, lst[1:]))
             return a_list
+    print(a_list)
     return helper(start, lst)
 
 
@@ -64,7 +70,7 @@ def check_intervals(piece, num):
     """check_intrvals([[1,1,3,5], [2,2,4,6]], 4)
     >>>[[[1,4], [2,4]], [[1,4], [2,4]]]"""
     assert isinstance(piece, Piece), 'the input has to be a piece dude'
-    reviesed_piece = remove_common_tone(Piece)
+    reviesed_piece = remove_common_tone(piece)
     voices_with_interval = []
     for chord in reviesed_piece:
         voices_with_interval.append(check_each_elem(1, chord, num))
@@ -74,8 +80,11 @@ def check_intervals(piece, num):
 def check_and_print(voices_list, statement):
     #this part is very bad, I'm gonna fix this alter
     """check the processed voice list, and print out a statement if there is a parallel something"""
-    voice_num={1: soprano, 2: alto, 3: tenor, 4: bass}
-    for chord in range(voices_list):
+    voice_num={1: 'soprano', 2: 'alto', 3: 'tenor', 4: 'bass'}
+    if len(voices_list)==1:
+        print ('Done')
+        return None
+    for chord in range(len(voices_list)-1):
         first, second = voices_list[chord], voices_list[chord+1]
         min_len = min(len(first), len(second))
         for j in range(min_len):
@@ -85,16 +94,16 @@ def check_and_print(voices_list, statement):
 
 
 def check_paralle_fifth(piece):
-    result = check_intervals(piece, 6)
+    result = check_intervals(piece, 7)
     check_and_print(result, "fifth")
 
 def check_paralle_octave(Piece):
-    result = check_intervals(Piece, 9)
+    result = check_intervals(Piece, 0)
     check_and_print(result, "octave")
 
-def check_paralle_unison(Piece):
-    result = check_intervals(Piece, 0)
-    check_and_print(result, "unison")
+# def check_paralle_unison(Piece):
+#     result = check_intervals(Piece, 0)
+#     check_and_print(result, "unison")
 
 
 def has_third(piece):
@@ -103,21 +112,26 @@ def has_third(piece):
 
     #assert isinstance(piece Piece), "nah the input has to be a piece my friend"
     result = expand_piece(piece)
+    lst = []
+    for chord in result:
+        chord_lst = []
+        for note in chord:
+            chord_lst.append(note%12)
+        lst.append(chord_lst)
     index = 1
-    for chords in result:
-        compare = chord[:]
-        root = min(compare)
-        compare.remove(root)
-        maybe_third = min(compare)
-        if round(maybe_third-root) !=2:
-            print("Chord No. {0} has no third! {}".format(index, chords))
+    for chords in lst:
+        root = min(chords)
+        third1 = root+4
+        third2 = root+3
+        if third1 not in chords and third2 not in chords:
+            print("Chord No. {0} has no third! {1}".format(index, chords))
         index+=1
 
 def leading_tone_doubled(piece):
     """check each chord if the leading tone is doubeled"""
     assert isinstance(piece, Piece), "the input has to be a piece!"
     expanded = expand_piece(piece)
-    root = min(expand_piece[0])
+    root = min(expanded[0])
     if root ==1:
         leading = 11
     else:
@@ -146,7 +160,7 @@ def seventh_resolved_down(piece):
     expanded = expand_piece(piece)
     curr, second = iter(expanded), iter(expanded)
     next(second)
-    try:
+    while curr:
         chord_count = 1
         curr_chord = next(curr)
         if is_seventh(curr_chord):
@@ -158,8 +172,8 @@ def seventh_resolved_down(piece):
         chord_count+=1
         next(curr)
         next(second)
-    except StopIterationError as e:
-        print("check seventh res, done")
+    # except StopIterationError as e:
+    #     print("check seventh res, done")
 
 def run_it():
     start=True
@@ -174,10 +188,17 @@ def run_it():
         new_piece.get_input()
         #here goes soemthing that allows the guitar to play
         has_third(new_piece)
-        leading_tone_doubled(new_piece)
-        seventh_resolved_down(new_piece)
+        #leading_tone_doubled(new_piece)
+        #seventh_resolved_down(new_piece)
         check_paralle_fifth(new_piece)
         check_paralle_octave(new_piece)
-        check_paralle_unison(new_piece)
+        # check_paralle_unison(new_piece)
 
 run_it()
+
+# new_measure = Measure(4)
+# C3 = Note('C', 3)
+# C4 = Note('C', 4)
+# G4 = Note('G', 4)
+# E4 = Note('E', 4)
+# c_major_triad = Chord(C3, C4, G4, E4)

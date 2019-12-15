@@ -75,8 +75,8 @@ class Piece:
                 for voice in range(4):
                     voice_input = input('Measuere {0} Beat {1} voice {2}'.\
                     format(count_measure, i, voice))
-                    name, quality, octave = self.prcoessor(voice_input)
-                    lst.append(Note(name, quality, octave))
+                    name, quality, octave = self.processor(voice_input)
+                    lst.append(Note(name, octave, quality))
                 new_chord = Chord(lst[0], lst[1], lst[2], lst[3])
                 self.get_measure(i - 1).add_chord(new_chord)
 
@@ -100,11 +100,11 @@ class Piece:
         if len(string) == 3:
             name = [0]
             quality = string[1]
-            octave = string[2]
+            octave = int(string[2])
         else:
             name = string[0]
-            quality = None
-            octave = string[1]
+            quality = ''
+            octave = int(string[1])
         return name, quality, octave
 
 
@@ -325,7 +325,7 @@ class Note:
     def frequency(self):
         return self.pitch_dict[self]
 
-    def
+
 
 
 # new_measure = Measure(4)

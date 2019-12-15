@@ -17,7 +17,6 @@ def convert_to_number(measure):
     return note_numbers
 
 def expand_piece(piece):
-    """"""
     output_lst = []
     for measure in piece.measures:
         output_lst.extend(convert_to_number(measure))
@@ -86,19 +85,23 @@ def check_and_print(voices_list, statement):
 
 
 def check_paralle_fifth(piece):
-    result = check_intervals(piece, 4)
+    result = check_intervals(piece, 6)
     check_and_print(result, "fifth")
 
 def check_paralle_octave(Piece):
-    result = check_intervals(Piece, 0)
+    result = check_intervals(Piece, 9)
     check_and_print(result, "octave")
+
+def check_paralle_unison(Piece):
+    result = check_intervals(Piece, 0)
+    check_and_print(result, "unison")
 
 
 def has_third(piece):
     """expanded_piece = [[1,1,5,1], [2,2,4,6]]
     >>>'Chord No.1 has no third!' """
 
-    assert isinstance(piece Piece), "nah the input has to be a piece my friend"
+    #assert isinstance(piece Piece), "nah the input has to be a piece my friend"
     result = expand_piece(piece)
     index = 1
     for chords in result:
@@ -134,9 +137,9 @@ def is_seventh(chord_in_num_form):
 def find_seventh(chord_in_num_form):
     root = min(chord)
     if root == 1:
-        return seventh = 11
+        return 11
     else:
-        return seventh = root-1
+        return root-1
 
 def seventh_resolved_down(piece):
     """check each seventh chord in a piece whether or not the seventh is resolved down by step"""
@@ -159,14 +162,15 @@ def seventh_resolved_down(piece):
         print("check seventh res, done")
 
 def run_it():
-    start==True
+    start=True
     while start:
         print('Hello welcome my dude! You are composing music now.')
         new_piece = Piece(int(input('how many measures would you like?')), \
                         int(input('And how many beats?')))
-        if new_piece.measure = 0:
+        if new_piece.num_measures == 0 or new_piece.num_beats ==0:
             start = False
-            return "OK BYE"
+            print("OK BYE")
+            return None
         new_piece.get_input()
         #here goes soemthing that allows the guitar to play
         has_third(new_piece)
@@ -174,5 +178,6 @@ def run_it():
         seventh_resolved_down(new_piece)
         check_paralle_fifth(new_piece)
         check_paralle_octave(new_piece)
+        check_paralle_unison(new_piece)
 
 run_it()

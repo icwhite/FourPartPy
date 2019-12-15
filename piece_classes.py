@@ -99,7 +99,7 @@ class Measure:
     def add_chord(self, chord):
         """Add a chord object """
         assert self.curr_beat<=self.num_beats, "Beat is out of range"
-        self.chords.insert(curr_beat, chord) #append it in certain places so that the beat can allign 
+        self.chords.insert(self.curr_beat, chord) #append it in certain places so that the beat can allign
         self.curr_beat += chord.duration
 
     def rm_chord(self, identifier):
@@ -214,7 +214,7 @@ class Note:
                     '': 0, '#': 1, 'b': -1}
     pitch_dict = {}
 
-
+ 
 
     def __init__(self, note_name=None, octave=None, quality='',
         non_func = False):
@@ -222,9 +222,7 @@ class Note:
         self.octave = octave
         self.quality = quality
         self.non_func = non_func
-        self.number = self.notes_and_num[note_name] + \
-                    self.notes_and_num[quality] + \
-                    self.octave * 12
+        self.number = self.notes_and_num[note_name] + self.notes_and_num[quality] + octave * 12
         # self.frequency = self.pitch_dict[self]
 
     def change_note_name(self, new_name):

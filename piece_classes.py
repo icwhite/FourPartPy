@@ -71,18 +71,41 @@ class Piece:
             print("Now let's create music for measure No. {0} ".format(count_measure))
             # count_beats = self.num_beats #number of beats in the current measure
             for i in range(1, self.num_beats+1):
-                bass = Note(input('Measure {0} Beat {1} bass voice '\
-                                    .format(count_measure, i)))
-                tenor = Note(input('Measure {0} Beat {1} tenor voice '\
-                                    .format(count_measure, i)))
-                alto = Note(input('Measure {0} Beat {1} alto voice '\
-                                    .format(count_measure, i)))
-                soprano = Note(input('Measure {0} Beat {1} soprano voice '\
-                                        .format(count_measure, i)))
-                                 #also durations and stuff but I am a bit lazy lol
-                new_chord = Chord(soprano, alto, tenor, bass)
+                lst = []
+                for voice in range(4):
+                    voice_input = input('Measuere {0} Beat {1} voice {2}'.\
+                    format(count_measure, i, voice))
+                    name, quality, octave = self.prcoessor(voice_input)
+                    lst.append(Note(name, quality, octave))
+                new_chord = Chord(lst[0], lst[1], lst[2], lst[3])
                 self.get_measure(i - 1).add_chord(new_chord)
+
+
+                # bass_input = input('Measure {0} Beat {1} bass voice '\
+                #                     .format(count_measure, i))
+                # bass_name, bass_quality, bass_octave = self.processor(bass_input)
+                # bass = Note(bass_name, bass_quality, bass_octave)
+                #
+                # tenor = Note(input('Measure {0} Beat {1} tenor voice '\
+                #                     .format(count_measure, i)))
+                # alto = Note(input('Measure {0} Beat {1} alto voice '\
+                #                     .format(count_measure, i)))
+                # soprano = Note(input('Measure {0} Beat {1} soprano voice '\
+                #                         .format(count_measure, i)))
+                #                  #also durations and stuff but I am a bit lazy lol
+                # new_chord = Chord(soprano, alto, tenor, bass)
             count_measure += 1
+
+    def processor(self, string):
+        if len(string) == 3:
+            name = [0]
+            quality = string[1]
+            octave = string[2]
+        else:
+            name = string[0]
+            quality = None
+            octave = string[1]
+        return name, quality, octave
 
 
 
@@ -214,7 +237,7 @@ class Note:
                     '': 0, '#': 1, 'b': -1}
     pitch_dict = {}
 
- 
+
 
     def __init__(self, note_name=None, octave=None, quality='',
         non_func = False):
@@ -301,6 +324,8 @@ class Note:
 
     def frequency(self):
         return self.pitch_dict[self]
+
+    def
 
 
 # new_measure = Measure(4)

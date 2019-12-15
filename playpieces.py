@@ -23,18 +23,33 @@ def pluck_guitar(note, start, end):
     print('hi!!')
     def sampler(t):
         seconds = t/frame_rate
-        # if seconds < start:
-        #     return 0
-        # elif seconds > end:
-        #     return 0
-        # else:
-        return string.sampler()
+        if seconds < start:
+            return 0
+        elif seconds > end:
+            return 0
+        else:
+            return string.sampler()
     return sampler
     # sampler = lambda x: string.sampler()
     # return string.sampler
 
-C2_sampler = pluck_guitar('C2', 0.5, 3)
+def play_chord(notes, start, end):
+    '''Plays a chord.
+    >>> s = play_chord(['C3', 'A4'], 0.5, 2)'''
+    samplers = []
+    for note in notes:
+        samplers.append(pluck_guitar(note, start, end))
+    def sampler(t):
+        total = 0
+        for s in samplers:
+            total += s(t)
+        return total
+    return sampler
+
+
+C3_sampler = pluck_guitar('C3', 0.5, 3)
 A4_sampler = pluck_guitar('A4', 0.5, 3)
+chord = play_chord(['C3', 'G3', "E4", 'C5'], 0.5, 2)
 # print(A4_sampler)
-play(A4_sampler, "struggles.wav")
+play(chord, "struggles.wav")
 print(guitarstrings['A4'].tic_counter)

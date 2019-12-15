@@ -3,6 +3,9 @@ from wave import open
 from struct import Struct
 from math import floor
 from RingBuffer import *
+import matplotlib as plt
+
+
 frame_rate = 44100
 
 def encode(x):

@@ -225,6 +225,7 @@ class Chord:
     def non_func(self, note):
         '''Add a passing tone for an already existing chord
         will be played OFF the beat.'''
+        pass
 
 class Note:
     """A note should be in the form of new_note = Note (C, 4, #)

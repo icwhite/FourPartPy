@@ -60,7 +60,7 @@ def check_each_elem(start, lst, num):
 
 
 
-def check_intervals(Piece, num):
+def check_intervals(piece, num):
     """return a list of voices that has the designated interval"""
     """check_intrvals([[1,1,3,5], [2,2,4,6]], 4)
     >>>[[[1,4], [2,4]], [[1,4], [2,4]]]"""

@@ -33,8 +33,8 @@ def pluck_guitar(note, start, end):
     # sampler = lambda x: string.sampler()
     # return string.sampler
 
-C2_sampler = pluck_guitar('C2', 0.5, 3)
+C3_sampler = pluck_guitar('C3', 0.5, 3)
 A4_sampler = pluck_guitar('A4', 0.5, 3)
 # print(A4_sampler)
-play(A4_sampler, "struggles.wav")
+play(C3_sampler, "struggles.wav")
 print(guitarstrings['A4'].tic_counter)

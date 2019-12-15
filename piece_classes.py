@@ -325,10 +325,10 @@ class Note:
 
     def frequency(self):
         return self.pitch_dict[self]
-
-Note.generate_equal()
-for note in Note.pitch_dict:
-    print(note, Note.pitch_dict[note])
+# testing to see whether pitch dict still works
+# Note.generate_equal()
+# for note in Note.pitch_dict:
+#     print(note, Note.pitch_dict[note])
 
 
 # new_measure = Measure(4)

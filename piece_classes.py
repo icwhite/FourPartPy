@@ -225,6 +225,7 @@ class Chord:
     def non_func(self, note):
         '''Add a passing tone for an already existing chord
         will be played OFF the beat.'''
+        pass
 
 class Note:
     """A note should be in the form of new_note = Note (C, 4, #)
@@ -245,7 +246,8 @@ class Note:
         self.octave = octave
         self.quality = quality
         self.non_func = non_func
-        self.number = self.notes_and_num[note_name] + self.notes_and_num[quality] + octave * 12
+        self.number = self.notes_and_num[note_name] + \
+                    self.notes_and_num[quality] + octave * 12
         # self.frequency = self.pitch_dict[self]
 
     def change_note_name(self, new_name):
@@ -324,8 +326,10 @@ class Note:
 
     def frequency(self):
         return self.pitch_dict[self]
-
-
+# testing to see whether pitch dict still works
+# Note.generate_equal()
+# for note in Note.pitch_dict:
+#     print(note, Note.pitch_dict[note])
 
 
 # new_measure = Measure(4)

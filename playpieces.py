@@ -46,10 +46,38 @@ def play_chord(notes, start, end):
         return total
     return sampler
 
+def chord_sampler(chord, start, end):
+    '''Plays a chord from the piece classes files.
+    >>> chord is a Chord instance with C3, G3, E4, and C5
+    >>> play_chord2(chord, start, end)
+    '''
+    samplers = []
+    for note in chord.voices.values():
+        samplers.append(pluck_guitar(note, start, end))
+    def sampler(t):
+        total = 0
+        for s in samplers:
+            total += s(t)
+        return total
+    return sampler
+
+def piece_sampler(piece):
+    '''Takes in a piece instance and then plays the music. :)'''
+    pass
+
 
 C3_sampler = pluck_guitar('C3', 0.5, 3)
 A4_sampler = pluck_guitar('A4', 0.5, 3)
+# testing the class version
+C3 = Note('C', 3)
+C4 = Note('C', 4)
+G4 = Note('G', 4)
+E4 = Note('E', 4)
+c_major_triad = Chord(C3, C4, G4, E4)
+class_chord = chord_sampler(c_major_triad, 0.5, 2)
+
 chord = play_chord(['C3', 'G3', "E4", 'C5'], 0.5, 2)
+
 # print(A4_sampler)
-play(chord, "struggles.wav")
+play(class_chord, "debugging.wav")
 print(guitarstrings['A4'].tic_counter)

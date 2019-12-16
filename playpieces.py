@@ -68,6 +68,7 @@ def piece_sampler(piece):
 
 C3_sampler = pluck_guitar('C3', 0.5, 3)
 A4_sampler = pluck_guitar('A4', 0.5, 3)
+G4_sampler = pluck_guitar('G4', 0.5, 3)
 # testing the class version
 C3 = Note('C', 3)
 C4 = Note('C', 4)
@@ -79,5 +80,5 @@ class_chord = chord_sampler(c_major_triad, 0.5, 2)
 chord = play_chord(['C3', 'G3', "E4", 'C5'], 0.5, 2)
 
 # print(A4_sampler)
-play(class_chord, "debugging.wav")
+play(C3_sampler, "checking.wav")
 print(guitarstrings['A4'].tic_counter)

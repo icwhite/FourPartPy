@@ -43,7 +43,7 @@ def play_buffer(b_sampler, name="guitar-testing.wav", seconds=2):
     for t in range(seconds * frame_rate):
         sample = b_sampler()
         if not t % 1000:
-            print(sample)
+            # print(sample)
         out.writeframes(encode(sample))
     out.close()
 

@@ -20,7 +20,7 @@ def pluck_guitar(note, start, end):
     string.pluck()
     # for _ in range(5000):
     #     string.sampler()
-    print('hi!!')
+    # print('hi!!')
     def sampler(t):
         seconds = t/frame_rate
         if seconds < start:
@@ -75,10 +75,10 @@ C4 = Note('C', 4)
 G4 = Note('G', 4)
 E4 = Note('E', 4)
 c_major_triad = Chord(C3, C4, G4, E4)
-class_chord = chord_sampler(c_major_triad, 0.5, 2)
+# class_chord = chord_sampler(c_major_triad, 0.5, 2)
 
-chord = play_chord(['C3', 'G3', "E4", 'C5'], 0.5, 2)
+# chord = play_chord(['C3', 'G3', "E4", 'C5'], 0.5, 2)
 
 # print(A4_sampler)
-play(C3_sampler, "checking.wav")
-print(guitarstrings['A4'].tic_counter)
+play(A4_sampler, "checking.wav")
+# print(guitarstrings['A4'].tic_counter)

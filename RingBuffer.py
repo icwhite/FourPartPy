@@ -1,8 +1,11 @@
 # trying to do the one Princeton thing
 import random
 from math import floor
+from matplotlib import pyplot as plt
 SAMPLING_RATE = 44100
-ENERGY_DECAY = .999
+ENERGY_DECAY = .9999
+# plotting initialization
+
 class RingBuffer:
     '''A Ring Buffer.
     The ring buffer models the medium (a string tied down at both ends)
@@ -74,11 +77,14 @@ class GuitarString:
             self.buffer.enqueue(0)
 
     def pluck(self):
-        '''Set the buffer to a sine wave with the necessary frequency.'''
+        '''Set the buffer to a trianlge wave with the necessary frequency.'''
         for i in range(self.capacity):
-            self.buffer.dequeue()
-            self.buffer.enqueue(i / self.capacity - \
-                                floor(i / self.capacity + 0.5))
+            self.buffer.enqueue(random.uniform(-0.5,0.5))
+        # for setting the buffer to a triangle wave
+        # for i in range(self.capacity):
+        #     self.buffer.dequeue()
+        #     self.buffer.enqueue(i / self.capacity - \
+        #                         floor(i / self.capacity + 0.5))
 
     def tic(self):
         '''Applying the Karplus-Strong update. Delete the sample

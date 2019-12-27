@@ -3,10 +3,13 @@ from wave import open
 from struct import Struct
 from math import floor
 from RingBuffer import *
-import matplotlib as plt
+import numpy as np
+from matplotlib import pyplot as plt
+plt.title("Guitar String Results")
+plt.ylabel('Value')
 
-
-frame_rate = 44100
+y = []
+frame_rate = SAMPLING_RATE
 
 def encode(x):
     """Encode float x between -1 and 1 as two bytes.
@@ -27,9 +30,11 @@ def play(sampler, name='pluck-guitar.wav', seconds=2):
     while t < seconds * frame_rate:
         sample = sampler(t)
         # print(sample)
-        if not t % 1000:
-            print(sample)
-        out.writeframes(encode(sample))
+        # if not t % 1000:
+        #     print(sample)
+        # x.append(t)
+        y.append(sample)
+        # out.writeframes(encode(sample))
         t = t + 1
     out.close()
 
@@ -42,7 +47,7 @@ def play_buffer(b_sampler, name="guitar-testing.wav", seconds=2):
     out.setframerate(frame_rate)
     for t in range(seconds * frame_rate):
         sample = b_sampler()
-        if not t % 1000:
+        # if not t % 1000:
             # print(sample)
         out.writeframes(encode(sample))
     out.close()
@@ -114,7 +119,8 @@ def mario_at(octave):
     low_g = tri(octave * g_freq / 2)
     return mario(c, e, g, low_g)
 
-
+plt.plot(y)
+plt.show()
 
 
 

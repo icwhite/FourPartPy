@@ -5,8 +5,8 @@ from math import floor
 from RingBuffer import *
 import numpy as np
 from matplotlib import pyplot as plt
-plt.title("Guitar String Results")
-plt.ylabel('Value')
+# plt.title("Guitar String Results")
+# plt.ylabel('Value')
 
 y = []
 frame_rate = SAMPLING_RATE
@@ -17,6 +17,19 @@ def encode(x):
     """
     i = int(16384 * x)
     return Struct('h').pack(i)
+
+def graph_soundwaves(sampler, name="soundwave", seconds=2):
+    plt.title(name)
+    plt.ylabel("Values")
+    t = 0
+    lst = []
+    while t < seconds * frame_rate:
+        sample = sampler(t)
+        lst.append(sample)
+        t = t + 1
+    print(lst)
+    plt.plot(lst)
+    plt.show()
 
 def play(sampler, name='pluck-guitar.wav', seconds=2):
     """Write the output of a sampler function as a wav file.
@@ -33,7 +46,7 @@ def play(sampler, name='pluck-guitar.wav', seconds=2):
         # if not t % 1000:
         #     print(sample)
         # x.append(t)
-        y.append(sample)
+        # y.append(sample)
         # out.writeframes(encode(sample))
         t = t + 1
     out.close()
@@ -47,8 +60,8 @@ def play_buffer(b_sampler, name="guitar-testing.wav", seconds=2):
     out.setframerate(frame_rate)
     for t in range(seconds * frame_rate):
         sample = b_sampler()
-        # if not t % 1000:
-            # print(sample)
+        if not t % 1000:
+            y.append(sample)
         out.writeframes(encode(sample))
     out.close()
 
@@ -118,10 +131,12 @@ def mario_at(octave):
     g = tri(octave * g_freq)
     low_g = tri(octave * g_freq / 2)
     return mario(c, e, g, low_g)
-
-plt.plot(y)
-plt.show()
-
+# print(y)
+# plt.plot(y)
+# plt.show()
+# need to change the scaling of the graph
+# A4_sampler = pluck_guitar('A4', 0.5, 3)
+# play(A4_sampler, 'checking.wav')
 
 
 # play(both(mario_at(1), mario_at(1/2)))

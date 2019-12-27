@@ -1,4 +1,5 @@
 from sound import *
+from RingBuffer import *
 from piece_classes import *
 
 Note.generate_equal()
@@ -81,4 +82,6 @@ c_major_triad = Chord(C3, C4, G4, E4)
 
 # print(A4_sampler)
 play(A4_sampler, "checking.wav")
+A4_sampler = pluck_guitar
+graph_soundwaves(A4_sampler)
 # print(guitarstrings['A4'].tic_counter)

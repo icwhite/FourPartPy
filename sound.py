@@ -18,7 +18,7 @@ def encode(x):
     i = int(16384 * x)
     return Struct('h').pack(i)
 
-def graph_soundwave(sampler, name="soundwave", seconds=2):
+def graph_soundwaves(sampler, name="soundwave", seconds=2):
     plt.title(name)
     plt.ylabel("Values")
     lst = soundwave(sampler, seconds)

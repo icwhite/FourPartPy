@@ -47,8 +47,7 @@ class RingBuffer:
     def dequeue(self):
         '''Delete and return an item from the front. Increment first.'''
         # og_val = self.items[0]
-        val = self.items[self.first]
-        self.items[self.first] = 0 # remove the item at self.first
+        val = self.items.pop(self.first)
         self.first = (self.first + 1) % self.capacity
         return val
         # self.first = (self.first + 1) % self.capacity
@@ -104,7 +103,7 @@ class GuitarString:
         decay factor.'''
         self.tic_counter += 1
         print('Tic:', self.buffer.last)
-        new_val = 0.5 * (self.buffer.dequeue() + self.buffer.items[self.buffer.last])
+        new_val = 0.5 * (self.buffer.items[self.buffer.last] + self.buffer.dequeue())
         self.buffer.enqueue(new_val)
         # first = self.buffer.peek()
         # self.buffer.dequeue()

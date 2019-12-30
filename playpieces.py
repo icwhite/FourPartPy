@@ -78,10 +78,9 @@ E4 = Note('E', 4)
 c_major_triad = Chord(C3, C4, G4, E4)
 # class_chord = chord_sampler(c_major_triad, 0.5, 2)
 
-# chord = play_chord(['C3', 'G3', "E4", 'C5'], 0.5, 2)
+chord = play_chord(['C3', 'G3', "E4", 'C5'], 0.5, 2)
 
 # print(A4_sampler)
-play(A4_sampler, "checking.wav")
-A4_sampler = pluck_guitar
-graph_soundwaves(A4_sampler)
+play(chord, "chord.wav")
+# graph_soundwaves(A4_sampler)
 # print(guitarstrings['A4'].tic_counter)

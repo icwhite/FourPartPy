@@ -18,18 +18,21 @@ def encode(x):
     i = int(16384 * x)
     return Struct('h').pack(i)
 
-def graph_soundwaves(sampler, name="soundwave", seconds=2):
+def graph_soundwave(sampler, name="soundwave", seconds=2):
     plt.title(name)
     plt.ylabel("Values")
-    t = 0
-    lst = []
-    while t < seconds * frame_rate:
-        sample = sampler(t)
-        lst.append(sample)
-        t = t + 1
-    print(lst)
+    lst = soundwave(sampler, seconds)
     plt.plot(lst)
     plt.show()
+
+def soundwave(sampler, seconds=2):
+    t = 0
+    lst = []
+    while t< seconds * frame_rate:
+        sample = sampler(t)
+        lst.append(sample)
+        t += 1
+    return lst
 
 def play(sampler, name='pluck-guitar.wav', seconds=2):
     """Write the output of a sampler function as a wav file.

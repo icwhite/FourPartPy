@@ -37,16 +37,24 @@ class RingBuffer:
 
     def enqueue(self, x):
         '''Add item x to the end and increment last by 1'''
-        self.items.insert(self.last, x)
-        self.last = (self.last + 1) % self.capacity
+        if not self.isFull():
+            self.items.insert(self.last, x)
+            self.last = (self.last + 1) % self.capacity
+            print(self.last, len(self.items))
+        else:
+            raise SyntaxError("RingBuffer at capacity")
 
     def dequeue(self):
         '''Delete and return an item from the front. Increment first.'''
         # og_val = self.items[0]
+        val = self.items[self.first]
+        self.items[self.first] = 0 # remove the item at self.first
         self.first = (self.first + 1) % self.capacity
-        x = self.items[0]
-        self.items = self.items[1:]
-        return x
+        return val
+        # self.first = (self.first + 1) % self.capacity
+        # x = self.items[0]
+        # self.items = self.items[1:] # wait so first is being incremented twice????
+        # return x
         # return og_val
 
     def peek(self):
@@ -79,7 +87,10 @@ class GuitarString:
     def pluck(self):
         '''Set the buffer to a trianlge wave with the necessary frequency.'''
         for i in range(self.capacity):
-            self.buffer.enqueue(random.uniform(-0.5,0.5))
+            try:
+                self.buffer.enqueue(random.uniform(-0.5,0.5))
+            except SyntaxError:
+                return len(self.buffer.items)
         # for setting the buffer to a triangle wave
         # for i in range(self.capacity):
         #     self.buffer.dequeue()
@@ -92,11 +103,14 @@ class GuitarString:
         buffer the average of the first two samples multiplied by the energy
         decay factor.'''
         self.tic_counter += 1
-        first = self.buffer.peek()
-        self.buffer.dequeue()
-        second = self.buffer.peek()
-        new_val = (first + second)/2 * ENERGY_DECAY
+        print('Tic:', self.buffer.last)
+        new_val = 0.5 * (self.buffer.dequeue() + self.buffer.items[self.buffer.last])
         self.buffer.enqueue(new_val)
+        # first = self.buffer.peek()
+        # self.buffer.dequeue()
+        # second = self.buffer.peek()
+        # new_val = (first + second)/2 * ENERGY_DECAY
+        # self.buffer.enqueue(new_val)
 
     def sample(self):
         '''Return the first value at the beginning of the buffer.'''

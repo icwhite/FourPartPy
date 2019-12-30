@@ -16,6 +16,7 @@ def encode(x):
     (See https://docs.python.org/3/library/struct.html)
     """
     i = int(16384 * x)
+    print(i, x)
     return Struct('h').pack(i)
 
 def graph_soundwaves(sampler, name="soundwave", seconds=2):
@@ -38,21 +39,18 @@ def play(sampler, name='pluck-guitar.wav', seconds=2):
     """Write the output of a sampler function as a wav file.
     (See https://docs.python.org/3/library/wave.html)
     """
+    print('play function called!')
     out = open(name, 'wb')
     out.setnchannels(1)
-    out.setsampwidth(1)
+    out.setsampwidth(2)
     out.setframerate(frame_rate)
     t = 0
     while t < seconds * frame_rate:
         sample = sampler(t)
-        # print(sample)
-        # if not t % 1000:
-        #     print(sample)
-        # x.append(t)
-        # y.append(sample)
-        # out.writeframes(encode(sample))
         t = t + 1
+        out.writeframes(encode(sample))
     out.close()
+    print('play function done!')
 
 def play_buffer(b_sampler, name="guitar-testing.wav", seconds=2):
     '''Write the ouput of a sampler function as a wave file, but

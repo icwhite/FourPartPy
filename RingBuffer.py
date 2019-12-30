@@ -3,7 +3,7 @@ import random
 from math import floor
 from matplotlib import pyplot as plt
 SAMPLING_RATE = 44100
-ENERGY_DECAY = .9999
+ENERGY_DECAY = .994
 # plotting initialization
 
 class RingBuffer:
@@ -38,9 +38,10 @@ class RingBuffer:
     def enqueue(self, x):
         '''Add item x to the end and increment last by 1'''
         if not self.isFull():
+            # print(x, self.last)
             self.items.insert(self.last, x)
             self.last = (self.last + 1) % self.capacity
-            print(self.last, len(self.items))
+            # print(self.last, len(self.items))
         else:
             raise SyntaxError("RingBuffer at capacity")
 
@@ -58,7 +59,7 @@ class RingBuffer:
 
     def peek(self):
         '''Return but do not delete item from front.'''
-        return self.items[0]
+        return self.items[self.first]
 
     def __str__(self):
         return str(self.items)
@@ -80,14 +81,15 @@ class GuitarString:
         self.tic_counter = 0 # keeps track of how often tic is called
         self.capacity = round(SAMPLING_RATE/frequency)
         self.buffer = RingBuffer(self.capacity)
-        for _ in range(self.capacity):
-            self.buffer.enqueue(0)
+        # for _ in range(self.capacity):
+        #     self.buffer.enqueue(0)
 
     def pluck(self):
         '''Set the buffer to a trianlge wave with the necessary frequency.'''
         for i in range(self.capacity):
             try:
-                self.buffer.enqueue(random.uniform(-0.5,0.5))
+                # print(val)
+                self.buffer.enqueue(random.uniform(-1,1))
             except SyntaxError:
                 return len(self.buffer.items)
         # for setting the buffer to a triangle wave
@@ -100,11 +102,16 @@ class GuitarString:
         '''Applying the Karplus-Strong update. Delete the sample
         at the front of the ring buffer and then add to the end of the
         buffer the average of the first two samples multiplied by the energy
-        decay factor.'''
+        decay factor. Tic should return None.'''
         self.tic_counter += 1
-        print('Tic:', self.buffer.last)
-        new_val = 0.5 * (self.buffer.items[self.buffer.last] + self.buffer.dequeue())
+        # print('Tic:', self.buffer.last)
+        new_val = 0.5 * \
+                (self.buffer.items[self.buffer.last] + self.buffer.peek()) * \
+                ENERGY_DECAY
+        # print(self.buffer.peek())
+        self.buffer.dequeue()
         self.buffer.enqueue(new_val)
+        # return self.buffer.dequeue()
         # first = self.buffer.peek()
         # self.buffer.dequeue()
         # second = self.buffer.peek()

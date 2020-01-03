@@ -1,11 +1,11 @@
-# inputter
 class Piece:
     '''A class representing a Piece'''
-    def __init__(self, num_measures=4, num_beats=4, num_voices = 4):
+    def __init__(self, num_measures=4, num_beats=4, num_voices = 4, tempo = 120):
         self.num_measures = num_measures
         self.num_beats = num_beats
         self.measures = []
-        for i in range(num_measures):
+        self.tempo = tempo
+        for i in range(num_measures, self.tempo):
             self.measures.append(Measure(num_beats))
 
     def get_measure(self, measure_num):
@@ -92,7 +92,7 @@ class Piece:
                 #                     .format(count_measure, i)))
                 # soprano = Note(input('Measure {0} Beat {1} soprano voice '\
                 #                         .format(count_measure, i)))
-                #                  #also durations and stuff but I am a bit lazy lol
+                #                  #also num_beats and stuff but I am a bit lazy lol
                 # new_chord = Chord(soprano, alto, tenor, bass)
             count_measure += 1
 
@@ -112,9 +112,10 @@ class Piece:
 class Measure:
     """each individual measure consists of number of chords"""
     curr_beat = 0
-    def __init__(self, num_beats, num_voices = 4):
+    def __init__(self, num_beats, num_voices = 4, tempo=120):
         """things in it"""
         self.chords = []
+        self.tempo = tempo
         self.num_beats = num_beats
         # for i in range(num_beats):
         #     self.chords.append(Chord())
@@ -122,8 +123,10 @@ class Measure:
     def add_chord(self, chord):
         """Add a chord object """
         assert self.curr_beat<=self.num_beats, "Beat is out of range"
-        self.chords.insert(self.curr_beat, chord) #append it in certain places so that the beat can allign
-        self.curr_beat += chord.duration
+        # this really isn't quite that simple, need to insert in the
+        # correct place
+        self.chords.append(chord)
+        self.curr_beat += chord.num_beat
 
     def rm_chord(self, identifier):
         pass
@@ -138,7 +141,7 @@ class Measure:
         '''Prints out each of the chords in measure
         >>> m = Measure(4)
         >>> print(m)
-        >>> [add four chords, each with duration one in some manners]
+        >>> [add four chords, each with num_beat one in some manners]
         [ [] [] [] []
           [] [] [] []
           [] [] [] []
@@ -166,20 +169,23 @@ class Measure:
 class Chord:
     """the class creates a single chord with four notes, which are the
        soprano, the alto, the tenor and the bass. Each note is an instanse of the Note class.
-       Duration is a dictionary containing quater notes, whole note, half note, etc.
-       Each type corresbond with a duration, which is an integer"""
+       num_beat is a dictionary containing quater notes, whole note, half note, etc.
+       Each type corresbond with a num_beat, which is an integer"""
 
-    durations = {'Eighth': 0.5, 'Quarter': 1, "Half": 2, 'Dotted Half': 3, "Whole": 4}
+    beat_dict = {'Eighth': 0.5, 'Quarter': 1, "Half": 2, 'Dotted Half': 3, "Whole": 4}
     # do we want user to input "Quarter", "Eighth", etc or 1, 0.5, etc
 
-    def __init__(self, soprano=None, alto=None, tenor=None, bass=None, duration = durations['Quarter']):
+    def __init__(self, soprano=None, alto=None, tenor=None, bass=None, \
+                num_beats = beat_dict['Quarter'], tempo=120):
         assert "all has to be instance of Note class or None"
         self.voices = {'S': soprano, 'A': alto, 'T': tenor, 'B': bass}
         # self.soprano = soprano
         # self.alto = alto
         # self.tenor = tenor
         # self.bass = bass
-        self.duration = duration
+        self.tempo = tempo
+        self.num_beats = num_beats
+        self.num_seconds = 60/self.tempo * self.num_beats
 
     def get_voice(self, voice_letter):
         '''new_chord = Chord(E4)

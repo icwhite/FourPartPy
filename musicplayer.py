@@ -14,6 +14,7 @@ class Music:
         '''Set up the guitar and piece reading capabilities'''
         Note.generate_equal()
         pitch_dict = Note.pitch_dict
+        print('pitch dictionary', pitch_dict)
         self.strings = {}
         for note in Note.pitch_dict:
             self.strings[note] = GuitarString(Note.pitch_dict[note])
@@ -95,16 +96,16 @@ class Music:
         return lst
         #  self.play_lst(lst)
 
-    def play_piece(self, piece):
+    def play_piece(self, piece, name = "mypiece.wav"):
         '''Plays a piece instance from the piece_classes.py file. Conjoins all of
         the lists of integers generated self.play_chord'''
         lst = []
         curr = 0
         for measure in piece.measures:
             for chord in measure.chords:
-                lst.extend(chord_lst(chord, curr))
+                lst.extend(self.chord_lst(chord, curr))
                 curr += chord.num_seconds
-        self.play_lst(lst)
+        self.play_lst(lst, name)
 
 
     def normalize_lst(self, lst):
@@ -121,12 +122,18 @@ C4 = Note('C', 4)
 G4 = Note('G', 4)
 E4 = Note('E', 4)
 c_major_triad = Chord(C3, C4, G4, E4)
-c_major_triad.num_beats = 4
+c_major_triad.change_beats(4)
 D3 = Note('D', 3)
 D4 = Note('D', 4)
 A4 = Note('A', 4)
 Fs4 = Note('F#', 4)
 d_major_triad = Chord(D3, D4, A4, Fs4)
-d_major_triad.num_beats = 4
-p = Piece(num_measures=2, tempo=40)
-p.measures[0].add_chord()
+d_major_triad.change_beats(4)
+p = Piece(num_measures=2, tempo=60)
+m1 = Measure(4, 4, 60)
+m1.add_chord(c_major_triad)
+m2 = Measure(4,4,60)
+m2.add_chord(d_major_triad)
+p.add_measure(m1)
+p.add_measure(m2)
+m.play_piece(p)

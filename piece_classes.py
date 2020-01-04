@@ -362,11 +362,11 @@ class Note:
         for key in Note.notes_and_num:
             if Note.notes_and_num[key] == (n - 1) % 12 \
                 and key != '#' and key != '':
-                sharp = str(Note(key, octave_num, '#'))
+                sharp = str(Note(key + '#', octave_num))
                 # sharp += key + '#' + str(octave_num)
             elif Note.notes_and_num[key] == (n + 1) % 12\
                 and key != '#' and key != '':
-                flat = str(Note(key, octave_num, 'b'))
+                flat = str(Note(key + 'b', octave_num))
                 # flat += key + 'b' + str(octave_num)
         return [sharp, flat]
 

@@ -6,7 +6,7 @@ class Piece:
         self.measures = []
         self.tempo = tempo
         for i in range(num_measures, self.tempo):
-            self.measures.append(Measure(num_beats))
+            self.measures.append(Measure(num_beats, tempo = tempo))
 
     def get_measure(self, measure_num):
         '''Returns the measure corresponding to measure number
@@ -19,9 +19,31 @@ class Piece:
     def add_measure(self, measure = None):
         '''Adds a new blank measure to Piece at the end of the piece.
         Appends measure to self.measures'''
-        # should we scale this so you can do more
-        # complicated manipulations??
-        self.measures.append(Measure())
+        if measure is None:
+            self.measures.append(Measure(self.num_beats, self.num_voices, \
+                                         self.tempo))
+        else:
+            assert measure.num_beats == self.num_beats \
+                    'Cannot add this measure incorrect number of beats'
+            assert measure.num_voices == self.num_voices \
+                    'Cannot add this measure incorrect number of voices'
+            measure.change_tempo(self.tempo)
+            self.measures.append(measure)
+
+    def insert_measure(self, pos, measure = None):
+        '''Insert a measure at the designated position'''
+        assert pos <= len(self.measures)
+        if measure is None:
+            self.measures.insert(pos, Measure(self.num_beats, self.num_voices, \
+                                                self.tempo))
+        else:
+            assert measure.num_beats == self.num_beats \
+                    'Cannot add this measure incorrect number of beats'
+            assert measure.num_voices == self.num_voices \
+                    'Cannot add this measure incorrect number of voices'
+            measure.change_tempo(self.tempo)
+            self.measures.insert(pos, measure)
+
 
 
     def get_voice(self, measure_num, beat_num, voice):
@@ -125,6 +147,7 @@ class Measure:
         assert self.curr_beat<=self.num_beats, "Beat is out of range"
         # this really isn't quite that simple, need to insert in the
         # correct place
+        chord.change_tempo(self.tempo)
         self.chords.append(chord)
         self.curr_beat += chord.num_beat
 
@@ -137,6 +160,12 @@ class Measure:
                                                 hasn't been created yet!"
         return self.chords[index - 1]
 
+    def change_tempo(self, tempo):
+        '''Change the tempo of the measure and all the chords inside of it.'''
+        self.tempo = tempo
+        for chord in self.chords:
+            chord.change_tempo(tempo)
+
     def __str__(self):
         '''Prints out each of the chords in measure
         >>> m = Measure(4)
@@ -147,7 +176,7 @@ class Measure:
           [] [] [] []
           [] [] [] [] ]'''
         output = '['
-        for voice in Chord.voices: #This has to be a class attribute but now is an instance attribute
+        for voice in Chord.voices:
             for chord in self.chords:
                 note = chord.get_voice(voice)
                 if note is None:
@@ -179,10 +208,6 @@ class Chord:
                 num_beats = beat_dict['Quarter'], tempo=120):
         assert "all has to be instance of Note class or None"
         self.voices = {'S': soprano, 'A': alto, 'T': tenor, 'B': bass}
-        # self.soprano = soprano
-        # self.alto = alto
-        # self.tenor = tenor
-        # self.bass = bass
         self.tempo = tempo
         self.num_beats = num_beats
         self.num_seconds = 60/self.tempo * self.num_beats
@@ -198,6 +223,16 @@ class Chord:
         >>> new_chord.get_voice('S')
         E4'''
         self.voices[voice_letter] = note
+
+    def change_beats(self, beats):
+        '''Change the attribute num_beats and then update num_seconds'''
+        self.num_beats = beats
+        self.num_seconds = 60/self.tempo * self.num_beats
+
+    def change_tempo(self, tempo):
+        '''Change the tempo attribute and then change num_seconds accordingly'''
+        self.tempo = tempo
+        self.num_seconds = 60/self.tempo * self.num_beats
 
     def voice_part(self, voice_letter):
         '''

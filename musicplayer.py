@@ -50,6 +50,8 @@ class Music:
         plt.show()
 
     def soundwave(self, sampler, start=0, end=2):
+        '''Take a sampler and then turn it into a wavetable. Normalize the list
+        so that the max is 1 and the min is -1'''
         t = start * frame_rate
         lst = []
         while t< end * frame_rate:
@@ -84,12 +86,24 @@ class Music:
             return total
         return sampler
 
-    def play_chord(self, chord, start=0):
+    def chord_lst(self, chord, start=0):
         '''Plays a chord instance from the piece_classes.py classes
         and determines its length in seconds. Has a predetermined starting point
         which is given in seconds.'''
         sampler = self.chord_sampler(chord, start, start + chord.num_seconds)
         lst = self.soundwave(sampler, start, start + chord.num_seconds)
+        return lst
+        #  self.play_lst(lst)
+
+    def play_piece(self, piece):
+        '''Plays a piece instance from the piece_classes.py file. Conjoins all of
+        the lists of integers generated self.play_chord'''
+        lst = []
+        curr = 0
+        for measure in piece.measures:
+            for chord in measure.chords:
+                lst.extend(chord_lst(chord, curr))
+                curr += chord.num_seconds
         self.play_lst(lst)
 
 
@@ -100,12 +114,19 @@ class Music:
         for i in range(len(lst)):
             lst[i] = lst[i]/curr
 
-### testing for chord sampler
-muse = Music()
+### testing for chord sampler and piece sampler
+m = Music()
 C3 = Note('C', 3)
 C4 = Note('C', 4)
 G4 = Note('G', 4)
 E4 = Note('E', 4)
 c_major_triad = Chord(C3, C4, G4, E4)
-c_major_triad.num_seconds = 4
-muse.play_chord(c_major_triad)
+c_major_triad.num_beats = 4
+D3 = Note('D', 3)
+D4 = Note('D', 4)
+A4 = Note('A', 4)
+Fs4 = Note('F#', 4)
+d_major_triad = Chord(D3, D4, A4, Fs4)
+d_major_triad.num_beats = 4
+p = Piece(num_measures=2, tempo=40)
+p.measures[0].add_chord()

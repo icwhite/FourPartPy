@@ -35,6 +35,16 @@ def soundwave(sampler, seconds=2):
         t += 1
     return lst
 
+def play_lst(lst, name='lst-testing.wav', seconds=2):
+    '''Write a list of values as a wave file.'''
+    out = open(name, 'wb')
+    out.setnchannels(1)
+    out.setsampwidth(2)
+    out.setframerate(frame_rate)
+    for val in lst:
+        out.writeframes(encode(val))
+    out.close()
+
 def play(sampler, name='pluck-guitar.wav', seconds=2):
     """Write the output of a sampler function as a wav file.
     (See https://docs.python.org/3/library/wave.html)

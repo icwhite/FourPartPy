@@ -144,13 +144,14 @@ class Measure:
         self.num_voices = num_voices
         self.tempo = tempo
         self.num_beats = num_beats
-        for i in range(self.num_voices):
-            self.voices.append(Voice())
+        if voices == []:
+            for i in range(self.num_voices):
+                self.voices.append(Voice())
 
-    def add_voice(self, voice = Voice.empty):
-        '''Append a voice object to self.voices'''
-        voice.change_tempo(tempo)
-        self.voices.append(voice)
+    # def add_voice(self, voice = Voice.empty):
+    #     '''Append a voice object to self.voices'''
+    #     voice.change_tempo(tempo)
+    #     self.voices.append(voice)
 
     def add_chord(self, chord):
         """Add a chord object """
@@ -188,15 +189,14 @@ class Measure:
           [] [] [] []
           [] [] [] [] ]'''
         output = ''
-        for voice in range(self.num_voices):
+        for voice in self.voices:
             voice_str = ''
-            for chord in self.chords:
-                note = chord.get_voice(voice)
+            for note in voice.notes:
                 if note is None:
-                    output += ' [] ' + str(chord.num_beats)
+                    output += ' [] ' + str(note.num_beats)
                 else:
-                    output += ' ' + str(note) + '-' + str(chord.num_beats)
-            output += voice_str + '\n'
+                    output += ' ' + str(note) + '-' + str(note.num_beats)
+            output += '\n' + voice_str
         return output
 
 class Voice:
@@ -204,7 +204,6 @@ class Voice:
 
     beat_dict = {'Eighth': 0.5, 'Quarter': 1, "Half": 2, \
                     'Dotted Half': 3, "Whole": 4}
-    empty = Voice([])
     curr_beat = 0
 
     def __init__(self, notes = [], num_beats = 4, tempo = 120):
@@ -404,21 +403,21 @@ class Note:
 #     print(note, Note.pitch_dict[note])
 
 ### measure-str testing
-# new_measure = Measure(4)
-# C3 = Note('C', 3)
-# C4 = Note('C', 4)
-# G4 = Note('G', 4)
-# E4 = Note('E', 4)
-# c_major_triad = Chord(C3, C4, G4, E4)
-# c_major_triad.num_beats = 1.5
-# D3 = Note('D', 3)
-# D4 = Note('D', 4)
-# A4 = Note('A', 4)
-# Fs4 = Note('F#', 4)
-# d_major_triad = Chord(D3, D4, A4, Fs4)
-# new_measure.add_chord(c_major_triad)
-# new_measure.add_chord(d_major_triad)
-# print(new_measure)
+C3 = Note('C', 3)
+C3.num_beats = 2
+C4 = Note('C', 4)
+G4 = Note('G', 4)
+E4 = Note('E', 4)
+D3 = Note('D', 3)
+D4 = Note('D', 4)
+A4 = Note('A', 4)
+Fs4 = Note('F#', 4)
+b = Voice([C3])
+t = Voice([C4, D4])
+a = Voice([E4, Fs4])
+s = Voice([G4, A4])
+new_measure = Measure(2, 4, 40, [s,a,t,b])
+print(new_measure)
 # new_measure.add_chord(c_major_triad) # add the c_major_triad to the first chord in the Measure
 # new_measure.get_chord(1).set_voice('T', Note('B', 4, '#'))
 # new_measure.get_chord(1) #this will return the first chord, which is an instanse of the chord object

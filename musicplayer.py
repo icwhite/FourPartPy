@@ -115,25 +115,30 @@ class Music:
         for i in range(len(lst)):
             lst[i] = lst[i]/curr
 
+    def play_wave(self):
+        '''Somehow get the wave file to play from the terminal without the user
+        needing to know how to open the file. '''
+        pass
+
 ### testing for chord sampler and piece sampler
-m = Music()
-C3 = Note('C', 3)
-C4 = Note('C', 4)
-G4 = Note('G', 4)
-E4 = Note('E', 4)
-c_major_triad = Chord(C3, C4, G4, E4)
-c_major_triad.change_beats(4)
-D3 = Note('D', 3)
-D4 = Note('D', 4)
-A4 = Note('A', 4)
-Fs4 = Note('F#', 4)
-d_major_triad = Chord(D3, D4, A4, Fs4)
-d_major_triad.change_beats(4)
-p = Piece(num_measures=2, tempo=60)
-m1 = Measure(4, 4, 60)
-m1.add_chord(c_major_triad)
-m2 = Measure(4,4,60)
-m2.add_chord(d_major_triad)
-p.add_measure(m1)
-p.add_measure(m2)
-m.play_piece(p)
+# m = Music()
+# C3 = Note('C', 3)
+# C4 = Note('C', 4)
+# G4 = Note('G', 4)
+# E4 = Note('E', 4)
+# c_major_triad = Chord(C3, C4, G4, E4)
+# c_major_triad.change_beats(4)
+# D3 = Note('D', 3)
+# D4 = Note('D', 4)
+# A4 = Note('A', 4)
+# Fs4 = Note('F#', 4)
+# d_major_triad = Chord(D3, D4, A4, Fs4)
+# d_major_triad.change_beats(4)
+# p = Piece(num_measures=2, tempo=60)
+# m1 = Measure(4, 4, 60)
+# m1.add_chord(c_major_triad)
+# m2 = Measure(4,4,60)
+# m2.add_chord(d_major_triad)
+# p.add_measure(m1)
+# p.add_measure(m2)
+# m.play_piece(p)

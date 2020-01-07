@@ -1,8 +1,8 @@
 class Piece:
     '''A class representing a Piece'''
     def __init__(self, num_measures=0, num_beats=4, num_voices = 4, tempo = 120):
-        print('Measures: {0} Beats: {1} Voices: {2}, Tempo: {3}'.\
-                format(num_measures, num_beats, num_voices, tempo))
+        # print('Measures: {0} Beats: {1} Voices: {2}, Tempo: {3}'.\
+        #         format(num_measures, num_beats, num_voices, tempo))
         self.num_measures = num_measures
         self.num_beats = num_beats
         self.measures = []
@@ -20,8 +20,8 @@ class Piece:
         return self.measures[measure_num - 1]
 
     def add_measure(self, measure = None):
-        '''Adds a new blank measure to Piece at the end of the piece.
-        Appends measure to self.measures'''
+        '''Adds a new blank measure to Piece at the end of the piece if measure
+        is none, otherwise, appends the new measure to self.measures.'''
         assert type(measure) == Measure, 'must be measure instance'
         if measure is None:
             self.measures.append(Measure(self.num_beats, self.num_voices, \
@@ -47,8 +47,6 @@ class Piece:
                     'Cannot add this measure incorrect number of voices'
             measure.change_tempo(self.tempo)
             self.measures.insert(pos, measure)
-
-
 
     def get_voice(self, measure_num, beat_num, voice):
         '''Return the note at measure [measure_num] and beat [beat_num]
@@ -140,8 +138,8 @@ class Measure:
     curr_beat = 0
     def __init__(self, num_beats, num_voices = 4, tempo=120):
         """things in it"""
-        print('Beats: {0} Voices: {1}, Tempo: {2}'.\
-                format(num_beats, num_voices, tempo))
+        # print('Beats: {0} Voices: {1}, Tempo: {2}'.\
+        #         format(num_beats, num_voices, tempo))
         self.chords = []
         self.num_voices = num_voices
         self.tempo = tempo
@@ -182,23 +180,17 @@ class Measure:
           [] [] [] []
           [] [] [] []
           [] [] [] [] ]'''
-        output = '['
-        for voice in Chord.voices:
+        output = ''
+        for voice in range(self.num_voices):
+            voice_str = ''
             for chord in self.chords:
                 note = chord.get_voice(voice)
                 if note is None:
-                    output += ' []'
+                    output += ' [] ' + str(chord.num_beats)
                 else:
-                    output += ' ' + str(note)
-            if voice != 'B':
-                output += ' ]'
-            else:
-                output += '\n 1'
-        lst = []
-        for chord in self.chords:
-            for voice in chord.voices:
-                pass
-                # now
+                    output += ' ' + str(note) + '-' + str(chord.num_beats)
+            output += voice_str + '\n'
+        return output
 
 
 
@@ -214,17 +206,18 @@ class Chord:
     def __init__(self, soprano=None, alto=None, tenor=None, bass=None, \
                 num_beats = beat_dict['Quarter'], tempo=120):
         # assert "all has to be instance of Note class or None"
-        print('Beats: {0} Tempo: {1}'.\
-                format( num_beats, tempo))
-        self.voices = {'S': soprano, 'A': alto, 'T': tenor, 'B': bass}
+        # print('Beats: {0} Tempo: {1}'.\
+        #         format( num_beats, tempo))
+        # self.voices = {'S': soprano, 'A': alto, 'T': tenor, 'B': bass}
+        self.voices = [soprano, alto, tenor, bass]
         self.tempo = tempo
         self.num_beats = num_beats
         self.num_seconds = 60/self.tempo * self.num_beats
 
-    def get_voice(self, voice_letter):
+    def get_voice(self, index):
         '''new_chord = Chord(E4)
         new_chord.get_voice('S') -> E4'''
-        return self.voices[voice_letter]
+        return self.voices[index]
 
     def set_voice(self, voice_letter, note):
         '''new_chord = Chord()
@@ -292,7 +285,6 @@ class Note:
 
     def __init__(self, note_name=None, octave=None, non_func = False):
         if len(note_name) > 1:
-            print('an accidental!')
             self.note_name = note_name[0]
             self.quality = note_name[1]
         else:
@@ -341,7 +333,6 @@ class Note:
             # store frequency and name in pitch_dict
             frequency = 442 * scalar ** (num - A4_num)
             notes = Note.number_to_note(num)
-            print(num, notes)
             for note in notes:
                 Note.pitch_dict[note] = frequency
 
@@ -386,14 +377,22 @@ class Note:
 # for note in Note.pitch_dict:
 #     print(note, Note.pitch_dict[note])
 
-
-# new_measure = Measure(4)
-# C3 = Note('C', 3)
-# C4 = Note('C', 4)
-# G4 = Note('G', 4)
-# E4 = Note('E', 4)
-# c_major_triad = Chord(C3, C4, G4, E4)
-# print(c_major_triad)
+### measure-str testing
+new_measure = Measure(4)
+C3 = Note('C', 3)
+C4 = Note('C', 4)
+G4 = Note('G', 4)
+E4 = Note('E', 4)
+c_major_triad = Chord(C3, C4, G4, E4)
+c_major_triad.num_beats = 1.5
+D3 = Note('D', 3)
+D4 = Note('D', 4)
+A4 = Note('A', 4)
+Fs4 = Note('F#', 4)
+d_major_triad = Chord(D3, D4, A4, Fs4)
+new_measure.add_chord(c_major_triad)
+new_measure.add_chord(d_major_triad)
+print(new_measure)
 # new_measure.add_chord(c_major_triad) # add the c_major_triad to the first chord in the Measure
 # new_measure.get_chord(1).set_voice('T', Note('B', 4, '#'))
 # new_measure.get_chord(1) #this will return the first chord, which is an instanse of the chord object

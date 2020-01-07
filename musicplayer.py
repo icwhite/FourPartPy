@@ -87,6 +87,31 @@ class Music:
             return total
         return sampler
 
+    def voice_lst(self, voice, start, end):
+        output = []
+        curr = start
+        for note in voice.notes:
+            sampler = self.pluck_guitar(note, curr, curr + note.num_seconds)
+            output += self.soundwave(sampler, curr, curr + note.num_seconds)
+            curr += note.num_seconds
+        if curr < end:
+            sampler_0 = lambda t: 0
+            output += self.soundwave(sampler_0, curr, end)
+        return output
+
+    def measure_lst(self, measure, start, end):
+        '''Returns a sampler of a measure instance from piece_classes.py'''
+        output = []
+        iters = []
+        for voice in measure.voices:
+            iters.append(iter(voice_lst(voice)))
+        while not StopIterationError:
+            n = 0
+            for iter in iters:
+                n += next(iter)
+            output.append(n)
+        return output
+
     def chord_lst(self, chord, start=0):
         '''Plays a chord instance from the piece_classes.py classes
         and determines its length in seconds. Has a predetermined starting point
@@ -102,9 +127,8 @@ class Music:
         lst = []
         curr = 0
         for measure in piece.measures:
-            for chord in measure.chords:
-                lst.extend(self.chord_lst(chord, curr))
-                curr += chord.num_seconds
+            lst.extend(self.measure_lst(chord, curr))
+            curr += measure.num_seconds
         self.play_lst(lst, name)
 
 

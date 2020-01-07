@@ -140,7 +140,7 @@ class Measure:
         """things in it"""
         # print('Beats: {0} Voices: {1}, Tempo: {2}'.\
         #         format(num_beats, num_voices, tempo))
-        self.chords = []
+        self.voices = []
         self.num_voices = num_voices
         self.tempo = tempo
         self.num_beats = num_beats
@@ -167,9 +167,11 @@ class Measure:
 
     def change_tempo(self, tempo):
         '''Change the tempo of the measure and all the chords inside of it.'''
+        # this method could be optimized more :) 
         self.tempo = tempo
-        for chord in self.chords:
-            chord.change_tempo(tempo)
+        for voice in self.voices:
+            voice.change_tempo(tempo)
+        self.num_seconds = max([voice.num_seconds for voice in self.voices])
 
     def __str__(self):
         '''Prints out each of the chords in measure
@@ -192,6 +194,23 @@ class Measure:
             output += voice_str + '\n'
         return output
 
+class Voice:
+    '''Represents the notes in a given voice of a measure.'''
+    beat_dict = {'Eighth': 0.5, 'Quarter': 1, "Half": 2, \
+                    'Dotted Half': 3, "Whole": 4}
+    def __init__(self, notes = [], tempo = 120):
+        self.notes = notes
+        self.tempo = tempo
+        self.num_seconds = sum([note.num_seconds for note in self.notes])
+
+    def add_note(self, note = None):
+        self.notes.append(Note(self.tempo))
+
+    def change_tempo(self, tempo):
+        self.tempo = tempo
+        for note in self.notes:
+            note.change_tempo(tempo)
+        self.num_seconds = sum([note.num_seconds for note in self.notes])
 
 
 class Chord:
@@ -236,23 +255,6 @@ class Chord:
         self.tempo = tempo
         self.num_seconds = 60/self.tempo * self.num_beats
 
-    def voice_part(self, voice_letter):
-        '''
-        >>> new_chord = Chord(E4, G4, C4, C3)
-        >>> new_chord.voice_part('B')
-        C3'''
-        pass
-        # should I implement this? Seems a little useless
-        # I actually don't understand the point of this method...
-        # ...oops maybe I will just leave it here and hope I remember
-
-    def voice_to_letter(self, voice_letter):
-        '''Returns the corresponding voice letter for the voice entered
-        >>> c = Chord(E4)
-        >>> c.voice_to_letter(E4)
-        S'''
-        pass
-
     def __str__(self):
         '''
         >>> new_chord = Chord(C3, C4, G4, E4)
@@ -264,11 +266,6 @@ class Chord:
         #I forgot the exact symtax lol
         return "{0} \n{1} \n{2} \n{3}".format(self.voices['S'], self.voices['A'],
             self.voices['T'], self.voices['B'])
-
-    def non_func(self, note):
-        '''Add a passing tone for an already existing chord
-        will be played OFF the beat.'''
-        pass
 
 class Note:
     """A note should be in the form of new_note = Note (C, 4, #)
@@ -283,18 +280,30 @@ class Note:
 
 
 
-    def __init__(self, note_name=None, octave=None, non_func = False):
+    def __init__(self, note_name=None, octave=None, num_beats=1, tempo = 120):
         if len(note_name) > 1:
             self.note_name = note_name[0]
             self.quality = note_name[1]
         else:
             self.note_name = note_name
             self.quality = ''
-        self.non_func = non_func
+        self.tempo = tempo
+        self.num_beats = num_beats
+        self.num_seconds = 60/self.tempo * self.num_beats
         self.octave = octave
         self.number = self.notes_and_num[self.note_name] + \
                     self.notes_and_num[self.quality] + self.octave * 12
         # self.frequency = self.pitch_dict[self]
+
+    def change_beats(self, beats):
+        '''Change the attribute num_beats and then update num_seconds'''
+        self.num_beats = beats
+        self.num_seconds = 60/self.tempo * self.num_beats
+
+    def change_tempo(self, tempo):
+        '''Change the tempo attribute and then change num_seconds accordingly'''
+        self.tempo = tempo
+        self.num_seconds = 60/self.tempo * self.num_beats
 
     def change_note_name(self, new_name):
         assert new_name in self.available_names, "You have to put an actual note"

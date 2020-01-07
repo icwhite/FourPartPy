@@ -99,7 +99,7 @@ class Music:
             output += self.soundwave(sampler_0, curr, end)
         return output
 
-    def measure_lst(self, measure, start, end):
+    def measure_lst(self, measure, start):
         '''Returns a sampler of a measure instance from piece_classes.py'''
         output = []
         iters = []
@@ -145,24 +145,19 @@ class Music:
         pass
 
 ### testing for chord sampler and piece sampler
-# m = Music()
-# C3 = Note('C', 3)
-# C4 = Note('C', 4)
-# G4 = Note('G', 4)
-# E4 = Note('E', 4)
-# c_major_triad = Chord(C3, C4, G4, E4)
-# c_major_triad.change_beats(4)
-# D3 = Note('D', 3)
-# D4 = Note('D', 4)
-# A4 = Note('A', 4)
-# Fs4 = Note('F#', 4)
-# d_major_triad = Chord(D3, D4, A4, Fs4)
-# d_major_triad.change_beats(4)
-# p = Piece(num_measures=2, tempo=60)
-# m1 = Measure(4, 4, 60)
-# m1.add_chord(c_major_triad)
-# m2 = Measure(4,4,60)
-# m2.add_chord(d_major_triad)
-# p.add_measure(m1)
-# p.add_measure(m2)
-# m.play_piece(p)
+m = Music()
+C3 = Note('C', 3)
+C4 = Note('C', 4)
+G4 = Note('G', 4)
+E4 = Note('E', 4)
+D3 = Note('D', 3)
+D4 = Note('D', 4)
+A4 = Note('A', 4)
+Fs4 = Note('F#', 4)
+b = Voice([C3, D3])
+t = Voice([C4, D4])
+a = Voice([E4, Fs4])
+s = Voice([G4, A4])
+measure = Measure(2, 4, 40, [s,a,t,b])
+p = Piece(num_measures=1, tempo=40)
+p.add_measure(measure)

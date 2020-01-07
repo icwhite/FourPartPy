@@ -134,18 +134,23 @@ class Piece:
 
 
 class Measure:
-    """each individual measure consists of number of chords"""
+    """Represents a measure"""
     curr_beat = 0
-    def __init__(self, num_beats, num_voices = 4, tempo=120):
+    def __init__(self, num_beats, num_voices = 4, tempo=120, voices = []):
         """things in it"""
         # print('Beats: {0} Voices: {1}, Tempo: {2}'.\
         #         format(num_beats, num_voices, tempo))
-        self.voices = []
+        self.voices = voices
         self.num_voices = num_voices
         self.tempo = tempo
         self.num_beats = num_beats
-        # for i in range(num_beats):
-        #     self.chords.append(Chord())
+        for i in range(self.num_voices):
+            self.voices.append(Voice())
+
+    def add_voice(self, voice = Voice.empty):
+        '''Append a voice object to self.voices'''
+        voice.change_tempo(tempo)
+        self.voices.append(voice)
 
     def add_chord(self, chord):
         """Add a chord object """
@@ -167,7 +172,7 @@ class Measure:
 
     def change_tempo(self, tempo):
         '''Change the tempo of the measure and all the chords inside of it.'''
-        # this method could be optimized more :) 
+        # this method could be optimized more :)
         self.tempo = tempo
         for voice in self.voices:
             voice.change_tempo(tempo)
@@ -196,15 +201,29 @@ class Measure:
 
 class Voice:
     '''Represents the notes in a given voice of a measure.'''
+
     beat_dict = {'Eighth': 0.5, 'Quarter': 1, "Half": 2, \
                     'Dotted Half': 3, "Whole": 4}
-    def __init__(self, notes = [], tempo = 120):
+    empty = Voice([])
+    curr_beat = 0
+
+    def __init__(self, notes = [], num_beats = 4, tempo = 120):
         self.notes = notes
         self.tempo = tempo
+        self.num_beats = num_beats
         self.num_seconds = sum([note.num_seconds for note in self.notes])
 
-    def add_note(self, note = None):
-        self.notes.append(Note(self.tempo))
+    def add_note(self, note):
+        assert self.curr_beat<=self.num_beats, "Beat is out of range"
+        # this really isn't quite that simple, need to insert in the
+        # correct place
+        note.change_tempo(self.tempo)
+        self.note.append(chord)
+        self.curr_beat += note.num_beats
+        self.notes.append(note)
+
+    def get_note(self, index):
+        return self.notes[index]
 
     def change_tempo(self, tempo):
         self.tempo = tempo
@@ -277,8 +296,6 @@ class Note:
     notes_and_num = {'C': 0, 'D': 2, 'E': 4, 'F': 5, 'G':7, 'A':9, 'B':11, \
                     '': 0, '#': 1, 'b': -1}
     pitch_dict = {}
-
-
 
     def __init__(self, note_name=None, octave=None, num_beats=1, tempo = 120):
         if len(note_name) > 1:
@@ -387,21 +404,21 @@ class Note:
 #     print(note, Note.pitch_dict[note])
 
 ### measure-str testing
-new_measure = Measure(4)
-C3 = Note('C', 3)
-C4 = Note('C', 4)
-G4 = Note('G', 4)
-E4 = Note('E', 4)
-c_major_triad = Chord(C3, C4, G4, E4)
-c_major_triad.num_beats = 1.5
-D3 = Note('D', 3)
-D4 = Note('D', 4)
-A4 = Note('A', 4)
-Fs4 = Note('F#', 4)
-d_major_triad = Chord(D3, D4, A4, Fs4)
-new_measure.add_chord(c_major_triad)
-new_measure.add_chord(d_major_triad)
-print(new_measure)
+# new_measure = Measure(4)
+# C3 = Note('C', 3)
+# C4 = Note('C', 4)
+# G4 = Note('G', 4)
+# E4 = Note('E', 4)
+# c_major_triad = Chord(C3, C4, G4, E4)
+# c_major_triad.num_beats = 1.5
+# D3 = Note('D', 3)
+# D4 = Note('D', 4)
+# A4 = Note('A', 4)
+# Fs4 = Note('F#', 4)
+# d_major_triad = Chord(D3, D4, A4, Fs4)
+# new_measure.add_chord(c_major_triad)
+# new_measure.add_chord(d_major_triad)
+# print(new_measure)
 # new_measure.add_chord(c_major_triad) # add the c_major_triad to the first chord in the Measure
 # new_measure.get_chord(1).set_voice('T', Note('B', 4, '#'))
 # new_measure.get_chord(1) #this will return the first chord, which is an instanse of the chord object

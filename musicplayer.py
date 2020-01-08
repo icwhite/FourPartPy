@@ -5,6 +5,7 @@ from wave import open
 from struct import Struct
 import numpy as np
 from matplotlib import pyplot as plt
+import itertools
 
 frame_rate = SAMPLING_RATE
 
@@ -14,7 +15,6 @@ class Music:
         '''Set up the guitar and piece reading capabilities'''
         Note.generate_equal()
         pitch_dict = Note.pitch_dict
-        print('pitch dictionary', pitch_dict)
         self.strings = {}
         for note in Note.pitch_dict:
             self.strings[note] = GuitarString(Note.pitch_dict[note])
@@ -59,7 +59,8 @@ class Music:
             sample = sampler(t)
             lst.append(sample)
             t += 1
-        self.normalize_lst(lst)
+        # now located in measure_lst method
+        # self.normalize_lst(lst)
         return lst
 
     def play_lst(self, lst, name='class-testing.wav'):
@@ -104,12 +105,20 @@ class Music:
         output = []
         iters = []
         for voice in measure.voices:
-            iters.append(iter(voice_lst(voice)))
-        while not StopIterationError:
-            n = 0
-            for iter in iters:
-                n += next(iter)
-            output.append(n)
+            l = self.voice_lst(voice, start, start + measure.num_seconds)
+            it = iter(l)
+            iters.append(it)
+        x = 0
+        while x < 100000:
+            try:
+                n = 0
+                for it in iters:
+                    n += next(it)
+                output.append(n)
+                x += 1
+            except StopIteration:
+                return output
+        self.normalize_lst(output)
         return output
 
     def chord_lst(self, chord, start=0):
@@ -127,7 +136,7 @@ class Music:
         lst = []
         curr = 0
         for measure in piece.measures:
-            lst.extend(self.measure_lst(chord, curr))
+            lst.extend(self.measure_lst(measure, curr))
             curr += measure.num_seconds
         self.play_lst(lst, name)
 
@@ -159,5 +168,6 @@ t = Voice([C4, D4])
 a = Voice([E4, Fs4])
 s = Voice([G4, A4])
 measure = Measure(2, 4, 40, [s,a,t,b])
-p = Piece(num_measures=1, tempo=40)
+p = Piece(num_measures=1, num_beats = 2, tempo=40)
 p.add_measure(measure)
+m.play_piece(p)

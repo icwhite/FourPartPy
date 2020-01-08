@@ -143,6 +143,7 @@ class Measure:
         self.num_voices = num_voices
         self.tempo = tempo
         self.num_beats = num_beats
+        self.num_seconds = 60/self.tempo * self.num_beats
         if voices == []:
             for i in range(self.num_voices):
                 self.voices.append(Voice())
@@ -152,22 +153,13 @@ class Measure:
     #     voice.change_tempo(tempo)
     #     self.voices.append(voice)
 
-    def rm_chord(self, identifier):
-        pass
-
-    def get_chord(self, index):
-        assert index - 1 <= self.num_beats, "Beat is out of range"
-        assert index - 1 <= len(self.chords), "the chord at that beat\
-                                                hasn't been created yet!"
-        return self.chords[index - 1]
-
     def change_tempo(self, tempo):
         '''Change the tempo of the measure and all the chords inside of it.'''
         # this method could be optimized more :)
         self.tempo = tempo
         for voice in self.voices:
             voice.change_tempo(tempo)
-        self.num_seconds = max([voice.num_seconds for voice in self.voices])
+        self.num_seconds = 60/self.tempo * self.num_beats
 
     def __str__(self):
         '''Prints out each of the chords in measure
@@ -198,6 +190,7 @@ class Voice:
         self.notes = notes
         self.tempo = tempo
         self.num_beats = num_beats
+        # want this to be sum bc of how it is used in musicplayer class
         self.num_seconds = sum([note.num_seconds for note in self.notes])
         for note in self.notes:
             self.curr_beat += note.num_beats
@@ -230,59 +223,6 @@ class Voice:
 
 
 
-class Chord:
-    """the class creates a single chord with four notes, which are the
-       soprano, the alto, the tenor and the bass. Each note is an instanse of the Note class.
-       num_beat is a dictionary containing quater notes, whole note, half note, etc.
-       Each type corresbond with a num_beat, which is an integer"""
-
-    beat_dict = {'Eighth': 0.5, 'Quarter': 1, "Half": 2, 'Dotted Half': 3, "Whole": 4}
-    # do we want user to input "Quarter", "Eighth", etc or 1, 0.5, etc
-
-    def __init__(self, soprano=None, alto=None, tenor=None, bass=None, \
-                num_beats = beat_dict['Quarter'], tempo=120):
-        # assert "all has to be instance of Note class or None"
-        # print('Beats: {0} Tempo: {1}'.\
-        #         format( num_beats, tempo))
-        # self.voices = {'S': soprano, 'A': alto, 'T': tenor, 'B': bass}
-        self.voices = [soprano, alto, tenor, bass]
-        self.tempo = tempo
-        self.num_beats = num_beats
-        self.num_seconds = 60/self.tempo * self.num_beats
-
-    def get_voice(self, index):
-        '''new_chord = Chord(E4)
-        new_chord.get_voice('S') -> E4'''
-        return self.voices[index]
-
-    def set_voice(self, voice_letter, note):
-        '''new_chord = Chord()
-        >>> new_chord.set_voice('S', E4)
-        >>> new_chord.get_voice('S')
-        E4'''
-        self.voices[voice_letter] = note
-
-    def change_beats(self, beats):
-        '''Change the attribute num_beats and then update num_seconds'''
-        self.num_beats = beats
-        self.num_seconds = 60/self.tempo * self.num_beats
-
-    def change_tempo(self, tempo):
-        '''Change the tempo attribute and then change num_seconds accordingly'''
-        self.tempo = tempo
-        self.num_seconds = 60/self.tempo * self.num_beats
-
-    def __str__(self):
-        '''
-        >>> new_chord = Chord(C3, C4, G4, E4)
-        >>> print(new_chord)
-        C3
-        C4
-        G4
-        E4'''
-        #I forgot the exact symtax lol
-        return "{0} \n{1} \n{2} \n{3}".format(self.voices['S'], self.voices['A'],
-            self.voices['T'], self.voices['B'])
 
 class Note:
     """A note should be in the form of new_note = Note (C, 4, #)
@@ -402,25 +342,25 @@ class Note:
 #     print(note, Note.pitch_dict[note])
 
 ### measure-str testing
-C3 = Note('C', 3)
-C3.num_beats = 2
-C4 = Note('C', 4)
-G4 = Note('G', 4)
-E4 = Note('E', 4)
-D3 = Note('D', 3)
-D4 = Note('D', 4)
-A4 = Note('A', 4)
-Fs4 = Note('F#', 4)
-b = Voice([C3])
-t = Voice([C4, D4])
-a = Voice([E4, Fs4])
-s = Voice([G4, A4])
-print(s)
-new_measure = Measure(2, 4, 40, [s,a,t,b])
-piece = Piece(2, 2, 4, 40)
-piece.add_measure(new_measure)
-piece.add_measure()
-print(piece)
+# C3 = Note('C', 3)
+# C3.num_beats = 2
+# C4 = Note('C', 4)
+# G4 = Note('G', 4)
+# E4 = Note('E', 4)
+# D3 = Note('D', 3)
+# D4 = Note('D', 4)
+# A4 = Note('A', 4)
+# Fs4 = Note('F#', 4)
+# b = Voice([C3])
+# t = Voice([C4, D4])
+# a = Voice([E4, Fs4])
+# s = Voice([G4, A4])
+# print(s)
+# new_measure = Measure(2, 4, 40, [s,a,t,b])
+# piece = Piece(2, 2, 4, 40)
+# piece.add_measure(new_measure)
+# piece.add_measure()
+# print(piece)
 # new_measure.add_chord(c_major_triad) # add the c_major_triad to the first chord in the Measure
 # new_measure.get_chord(1).set_voice('T', Note('B', 4, '#'))
 # new_measure.get_chord(1) #this will return the first chord, which is an instanse of the chord object

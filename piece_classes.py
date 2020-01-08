@@ -48,6 +48,11 @@ class Piece:
             measure.change_tempo(self.tempo)
             self.measures.insert(pos, measure)
 
+    def remove_measure(self, pos):
+        '''Remove the measure at pos.'''
+        meas = self.measures[pos]
+        self.measures.remove(meas)
+
     def get_voice(self, measure_num, beat_num, voice):
         '''Return the note at measure [measure_num] and beat [beat_num]
         and voice corresponding to the letter entered.
@@ -146,12 +151,18 @@ class Measure:
         self.num_seconds = 60/self.tempo * self.num_beats
         if voices == []:
             for i in range(self.num_voices):
-                self.voices.append(Voice())
+                self.voices.append(Voice(num_beats = self.num_beats, \
+                                            tempo = self.tempo))
 
     # def add_voice(self, voice = Voice.empty):
     #     '''Append a voice object to self.voices'''
     #     voice.change_tempo(tempo)
     #     self.voices.append(voice)
+    def remove_voice(self, index):
+        '''Returns the voice to the empty state.'''
+        self.voices[index] = Voice(num_beats= self.num_beats, \
+                                    tempo = self.tempo)
+
 
     def change_tempo(self, tempo):
         '''Change the tempo of the measure and all the chords inside of it.'''
@@ -199,10 +210,16 @@ class Voice:
         assert self.curr_beat<=self.num_beats, "Beat is out of range"
         # this really isn't quite that simple, need to insert in the
         # correct place
+        if self.curr_beat > self.num_beats:
+            raise SyntaxError('Beat is out of range')
         note.change_tempo(self.tempo)
         self.note.append(chord)
         self.curr_beat += note.num_beats
         self.notes.append(note)
+
+    def remove_note(self):
+        '''Pops note off the end of notes'''
+        self.notes.pop()
 
     def get_note(self, index):
         return self.notes[index]

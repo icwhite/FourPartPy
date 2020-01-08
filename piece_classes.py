@@ -8,8 +8,8 @@ class Piece:
         self.measures = []
         self.tempo = tempo
         self.num_voices = num_voices
-        for i in range(num_measures, self.tempo):
-            self.measures.append(Measure(num_beats, tempo = tempo))
+        # for i in range(num_measures, self.tempo):
+        #     self.measures.append(Measure(num_beats, tempo = tempo))
 
     def get_measure(self, measure_num):
         '''Returns the measure corresponding to measure number
@@ -22,7 +22,7 @@ class Piece:
     def add_measure(self, measure = None):
         '''Adds a new blank measure to Piece at the end of the piece if measure
         is none, otherwise, appends the new measure to self.measures.'''
-        assert type(measure) == Measure, 'must be measure instance'
+        # assert type(measure) == Measure, 'must be measure instance'
         if measure is None:
             self.measures.append(Measure(self.num_beats, self.num_voices, \
                                          self.tempo))
@@ -135,7 +135,6 @@ class Piece:
 
 class Measure:
     """Represents a measure"""
-    curr_beat = 0
     def __init__(self, num_beats, num_voices = 4, tempo=120, voices = []):
         """things in it"""
         # print('Beats: {0} Voices: {1}, Tempo: {2}'.\
@@ -152,15 +151,6 @@ class Measure:
     #     '''Append a voice object to self.voices'''
     #     voice.change_tempo(tempo)
     #     self.voices.append(voice)
-
-    def add_chord(self, chord):
-        """Add a chord object """
-        assert self.curr_beat<=self.num_beats, "Beat is out of range"
-        # this really isn't quite that simple, need to insert in the
-        # correct place
-        chord.change_tempo(self.tempo)
-        self.chords.append(chord)
-        self.curr_beat += chord.num_beats
 
     def rm_chord(self, identifier):
         pass
@@ -190,12 +180,10 @@ class Measure:
           [] [] [] [] ]'''
         output = ''
         for voice in self.voices:
-            voice_str = ''
-            for note in voice.notes:
-                if note is None:
-                    output += ' [] ' + str(note.num_beats)
-                else:
-                    output += ' ' + str(note) + '-' + str(note.num_beats)
+            voice_str = str(voice)
+            if voice.curr_beat < self.num_beats:
+                for i in range(self.num_beats - voice.curr_beat):
+                    voice_str += ' [1] '
             output += '\n' + voice_str
         return output
 
@@ -204,13 +192,15 @@ class Voice:
 
     beat_dict = {'Eighth': 0.5, 'Quarter': 1, "Half": 2, \
                     'Dotted Half': 3, "Whole": 4}
-    curr_beat = 0
 
     def __init__(self, notes = [], num_beats = 4, tempo = 120):
+        self.curr_beat = 0
         self.notes = notes
         self.tempo = tempo
         self.num_beats = num_beats
         self.num_seconds = sum([note.num_seconds for note in self.notes])
+        for note in self.notes:
+            self.curr_beat += note.num_beats
 
     def add_note(self, note):
         assert self.curr_beat<=self.num_beats, "Beat is out of range"
@@ -229,6 +219,15 @@ class Voice:
         for note in self.notes:
             note.change_tempo(tempo)
         self.num_seconds = sum([note.num_seconds for note in self.notes])
+
+    def __str__(self):
+        '''Prints out a string representing the voice in the following format.
+        'A4-1 G4-1' '''
+        voice_str = ''
+        for note in self.notes:
+            voice_str += ' ' + str(note) + '-' + str(note.num_beats)
+        return voice_str
+
 
 
 class Chord:
@@ -416,8 +415,12 @@ b = Voice([C3])
 t = Voice([C4, D4])
 a = Voice([E4, Fs4])
 s = Voice([G4, A4])
+print(s)
 new_measure = Measure(2, 4, 40, [s,a,t,b])
-print(new_measure)
+piece = Piece(2, 2, 4, 40)
+piece.add_measure(new_measure)
+piece.add_measure()
+print(piece)
 # new_measure.add_chord(c_major_triad) # add the c_major_triad to the first chord in the Measure
 # new_measure.get_chord(1).set_voice('T', Note('B', 4, '#'))
 # new_measure.get_chord(1) #this will return the first chord, which is an instanse of the chord object

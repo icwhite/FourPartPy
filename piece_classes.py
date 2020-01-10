@@ -163,6 +163,14 @@ class Measure:
         self.voices[index] = Voice(num_beats= self.num_beats, \
                                     tempo = self.tempo)
 
+    def get_voice(self, index):
+        '''Return a voice.'''
+        return self.voices[index]
+
+    def voice_to_index(self, voice):
+        '''Returns the index in self.voices corresponding to the voice object.'''
+        return self.voices.index(voice)
+
 
     def change_tempo(self, tempo):
         '''Change the tempo of the measure and all the chords inside of it.'''
@@ -213,7 +221,6 @@ class Voice:
         if self.curr_beat > self.num_beats:
             raise SyntaxError('Beat is out of range')
         note.change_tempo(self.tempo)
-        self.note.append(chord)
         self.curr_beat += note.num_beats
         self.notes.append(note)
 

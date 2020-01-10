@@ -38,7 +38,7 @@ class Inputter:
                         '\n  d: delete a measure you have created'+ \
                         '\n  e: edit a measure you have created'+ \
                         '\n  l: listen to your piece so far!'+ \
-                        '\n  done: finish composing and hear your piece \n  '
+                        '\n  done: finish composing and hear your piece \n...'
         action = input(message_str)
         if not isinstance(action, str):
             self.composing()
@@ -48,21 +48,23 @@ class Inputter:
         '''Reads in input and then makes edits to the piece accordingly'''
         if action == 'n': # create new measure
             self.create_measure()
-        elif action == 't':
-            new_tempo = int(input('What would you like to change the tempo to?'))
+        elif action == 't': # no piece.change_tempo
+            new_tempo = int(input('What would you like to change the tempo to? '))
             self.piece.change_tempo(new_tempo)
             self.composing()
         elif action == 'p':
-            print(self.piece)
+            print('This is your piece so far!')
+            print(self.piece) # this doesn't work
             self.composing()
         elif action == 'd':
             print(self.piece)
-            index = int(input('Which measure would you like to delete?')) - 1
+            index = int(input('Which measure would you like to delete? ')) - 1
             try:
                 self.piece.remove_measure(index)
             except ValueError:
                 print('Oops! You entered a measure number which does not exist!')
                 self.forker('d')
+            self.composing()
         elif action == 'e':
             index = int(input('Which measure would you like to edit?')) - 1
             try:
@@ -90,6 +92,7 @@ class Inputter:
 
     def edit_measure(self):
         '''Prompts for input.'''
+        print('Your measure looks like...')
         print(self.selected_measure)
         message_str = 'Would you like to...' + \
                         '\n  e: edit a voice' + \
@@ -117,6 +120,7 @@ class Inputter:
             self.selected_measure = None
             self.composing()
         else:
+            print('Oops! Invalid input!')
             self.edit_measure()
 
 
@@ -129,8 +133,8 @@ class Inputter:
         print('...')
         voices = ['soprano', 'alto', 'tenor', 'bass']
         index = self.selected_measure.voice_to_index(self.selected_voice)
-        print('You are editing the {0} voice!'.format(index))
-        print(self.selected_voice)
+        print('You are editing the {0} voice!'.format(voices[index]))
+        print('It looks like...', self.selected_voice)
         message_str = 'Type [Letter][accidental][octave number] ex: C4, F#4' + \
                         '\n  d: to delete last note entered' + \
                         '\n  done: to be done editing this voice \n ...'

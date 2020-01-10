@@ -11,6 +11,11 @@ class Piece:
         # for i in range(num_measures, self.tempo):
         #     self.measures.append(Measure(num_beats, tempo = tempo))
 
+    def change_tempo(self, tempo):
+        self.tempo = tempo
+        for measure in self.measures:
+            measure.change_tempo(tempo)
+
     def get_measure(self, measure_num):
         '''Returns the measure corresponding to measure number
         inputted by the user
@@ -82,6 +87,7 @@ class Piece:
         Measure 4
         --- stuff ---
         '''
+        print('Piece.__str__')
         output = ''
         for i in range(self.num_measures):
             output += 'Measure {0} \n {1} \n'.format(i+1, str(self.measures[i]))
@@ -140,7 +146,7 @@ class Piece:
 
 class Measure:
     """Represents a measure"""
-    def __init__(self, num_beats, num_voices = 4, tempo=120, voices = []):
+    def __init__(self, num_beats=4, num_voices = 4, tempo=120, voices = []):
         """things in it"""
         # print('Beats: {0} Voices: {1}, Tempo: {2}'.\
         #         format(num_beats, num_voices, tempo))
@@ -170,7 +176,6 @@ class Measure:
     def voice_to_index(self, voice):
         '''Returns the index in self.voices corresponding to the voice object.'''
         return self.voices.index(voice)
-
 
     def change_tempo(self, tempo):
         '''Change the tempo of the measure and all the chords inside of it.'''
@@ -206,7 +211,7 @@ class Voice:
 
     def __init__(self, notes = [], num_beats = 4, tempo = 120):
         self.curr_beat = 0
-        self.notes = notes
+        self.notes = list(notes)
         self.tempo = tempo
         self.num_beats = num_beats
         # want this to be sum bc of how it is used in musicplayer class
@@ -218,11 +223,13 @@ class Voice:
         assert self.curr_beat<=self.num_beats, "Beat is out of range"
         # this really isn't quite that simple, need to insert in the
         # correct place
+        # print(self)
         if self.curr_beat > self.num_beats:
             raise SyntaxError('Beat is out of range')
         note.change_tempo(self.tempo)
         self.curr_beat += note.num_beats
         self.notes.append(note)
+        # print(self)
 
     def remove_note(self):
         '''Pops note off the end of notes'''

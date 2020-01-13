@@ -1,6 +1,7 @@
 # making a terminal inputter so that pieces can be easily accessed
 from piece_classes import *
 from musicplayer import *
+import subprocess
 
 class Inputter:
     '''A collection of methods needed for inputting piece data'''
@@ -73,6 +74,10 @@ class Inputter:
                 print('Oops! You entered a measure number which does not exist!')
                 self.forker('e')
             self.edit_measure()
+        elif action == 'l':
+            self.play_piece('newpiece.wav')
+            self.remove_file('newpiece.wav')
+            self.composing()
         elif action == 'done':
             self.end_of_piece()
         else:
@@ -175,8 +180,21 @@ class Inputter:
         print('Congrats! You have finished your piece!' + \
                 '\n  Here is what it looks like: \n ')
         print(self.piece)
+        name = input('Give your piece a name!')
+        print('Now hear it performed by the Karplus-Strong Algorithm')
+        self.play_piece(name + '.wav')
         # somehow play the piece
         # then analyze it
+
+    def play_piece(self, name = 'newpiece.wav'):
+        '''Creates a wave file and plays it without terminal interaction from
+        the user.'''
+        m = Music()
+        m.play_piece(self.piece, name)
+        m.play_wave(name)
+
+    def remove_file(self, name):
+        subprocess.run(['rm', name])
 
 def initiating_input():
     print("Welcome to the Four Part Chorale style music writer!")

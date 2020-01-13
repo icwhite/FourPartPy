@@ -8,7 +8,7 @@ class Inputter:
         self.measures = []
         self.beats_per = beats_per
         self.tempo = tempo
-        self.piece = Piece(0, self.beats_per, tempo = self.tempo)
+        self.piece = Piece(num_beats = self.beats_per, tempo = self.tempo)
         self.selected_measure = None
         self.selected_voice = None
         # print("Welcome to the Four Part Chorale style music writer!")
@@ -53,7 +53,7 @@ class Inputter:
             self.piece.change_tempo(new_tempo)
             self.composing()
         elif action == 'p':
-            print('This is your piece so far!')
+            print('This is your piece so far!\n')
             print(self.piece) # this doesn't work
             self.composing()
         elif action == 'd':
@@ -68,10 +68,11 @@ class Inputter:
         elif action == 'e':
             index = int(input('Which measure would you like to edit?')) - 1
             try:
-                self.edit_measure(index)
+                self.selected_measure = self.piece.get_measure(index)
             except ValueError:
                 print('Oops! You entered a measure number which does not exist!')
                 self.forker('e')
+            self.edit_measure()
         elif action == 'done':
             self.end_of_piece()
         else:
@@ -85,7 +86,7 @@ class Inputter:
             * delete a voice of their choosing 'd' -> further prompts
             * be done creating the measure 'done' '''
         print('...')
-        self.selected_measure = Measure(self.beats_per, tempo = self.tempo)
+        self.selected_measure = Measure(num_beats = self.beats_per, tempo = self.tempo)
         self.piece.add_measure(self.selected_measure)
         print('You created a measure!')
         self.edit_measure()
@@ -150,7 +151,7 @@ class Inputter:
             self.selected_voice = None
             self.edit_measure()
         else:
-            beats = int(input('How many beats would you like this beat to have? '))
+            beats = int(input('How many beats would you like this note to have? '))
             try:
                 self.add_note(action, beats)
             except SyntaxError:
@@ -162,7 +163,10 @@ class Inputter:
         octave = int(string[-1])
         name = string[:-1]
         note = Note(name, octave, num_beats, self.tempo)
-        self.selected_voice.add_note(note)
+        try:
+            self.selected_voice.add_note(note)
+        except SyntaxError:
+            self.voice_forker(string)
         self.edit_voice()
 
     def end_of_piece(self):

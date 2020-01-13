@@ -1,9 +1,9 @@
 class Piece:
     '''A class representing a Piece'''
-    def __init__(self, num_measures=0, num_beats=4, num_voices = 4, tempo = 120):
+    def __init__(self, num_beats=4, num_voices = 4, tempo = 120):
         # print('Measures: {0} Beats: {1} Voices: {2}, Tempo: {3}'.\
         #         format(num_measures, num_beats, num_voices, tempo))
-        self.num_measures = num_measures
+        # self.num_measures = num_measures
         self.num_beats = num_beats
         self.measures = []
         self.tempo = tempo
@@ -22,7 +22,10 @@ class Piece:
         >>> new_piece = Piece()
         >>> get_measure(1)
         --- repr for measure 1 --- '''
-        return self.measures[measure_num - 1]
+        return self.measures[measure_num]
+
+    def get_last_measure(self):
+        return self.measures[-1]
 
     def add_measure(self, measure = None):
         '''Adds a new blank measure to Piece at the end of the piece if measure
@@ -87,10 +90,12 @@ class Piece:
         Measure 4
         --- stuff ---
         '''
-        print('Piece.__str__')
+        # print('Piece.__str__')
         output = ''
-        for i in range(self.num_measures):
-            output += 'Measure {0} \n {1} \n'.format(i+1, str(self.measures[i]))
+        i = 1
+        for measure in self.measures:
+            output += 'Measure {0} \n {1} \n'.format(i, str(measure))
+            i += 1
         return output
 
     def __repr__(self): #I don't really know if this is correct, but the basic idea is to put the entire piece into a nexted list
@@ -220,11 +225,15 @@ class Voice:
             self.curr_beat += note.num_beats
 
     def add_note(self, note):
-        assert self.curr_beat<=self.num_beats, "Beat is out of range"
+        # program will allow more beats than in self.num_beats
+        # assert self.curr_beat<=self.num_beats, "Beat is out of range"
+        # assert self.curr_beat + note.num_beats <= self.num_beats, \
+        #     "cannot add this note, too many beats"
         # this really isn't quite that simple, need to insert in the
         # correct place
         # print(self)
-        if self.curr_beat > self.num_beats:
+        if self.curr_beat > self.num_beats or self.curr_beat + note.num_beats \
+            > self.num_beats:
             raise SyntaxError('Beat is out of range')
         note.change_tempo(self.tempo)
         self.curr_beat += note.num_beats

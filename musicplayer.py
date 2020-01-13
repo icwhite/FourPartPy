@@ -5,6 +5,7 @@ from wave import open
 from struct import Struct
 import numpy as np
 from matplotlib import pyplot as plt
+import itertools
 
 frame_rate = SAMPLING_RATE
 
@@ -14,7 +15,6 @@ class Music:
         '''Set up the guitar and piece reading capabilities'''
         Note.generate_equal()
         pitch_dict = Note.pitch_dict
-        print('pitch dictionary', pitch_dict)
         self.strings = {}
         for note in Note.pitch_dict:
             self.strings[note] = GuitarString(Note.pitch_dict[note])
@@ -59,7 +59,8 @@ class Music:
             sample = sampler(t)
             lst.append(sample)
             t += 1
-        self.normalize_lst(lst)
+        # now located in measure_lst method
+        # self.normalize_lst(lst)
         return lst
 
     def play_lst(self, lst, name='class-testing.wav'):
@@ -87,6 +88,39 @@ class Music:
             return total
         return sampler
 
+    def voice_lst(self, voice, start, end):
+        output = []
+        curr = start
+        for note in voice.notes:
+            sampler = self.pluck_guitar(note, curr, curr + note.num_seconds)
+            output += self.soundwave(sampler, curr, curr + note.num_seconds)
+            curr += note.num_seconds
+        if curr < end:
+            sampler_0 = lambda t: 0
+            output += self.soundwave(sampler_0, curr, end)
+        return output
+
+    def measure_lst(self, measure, start):
+        '''Returns a sampler of a measure instance from piece_classes.py'''
+        output = []
+        iters = []
+        for voice in measure.voices:
+            l = self.voice_lst(voice, start, start + measure.num_seconds)
+            it = iter(l)
+            iters.append(it)
+        x = 0
+        while x < 100000:
+            try:
+                n = 0
+                for it in iters:
+                    n += next(it)
+                output.append(n)
+                x += 1
+            except StopIteration:
+                return output
+        self.normalize_lst(output)
+        return output
+
     def chord_lst(self, chord, start=0):
         '''Plays a chord instance from the piece_classes.py classes
         and determines its length in seconds. Has a predetermined starting point
@@ -102,9 +136,8 @@ class Music:
         lst = []
         curr = 0
         for measure in piece.measures:
-            for chord in measure.chords:
-                lst.extend(self.chord_lst(chord, curr))
-                curr += chord.num_seconds
+            lst.extend(self.measure_lst(measure, curr))
+            curr += measure.num_seconds
         self.play_lst(lst, name)
 
 
@@ -115,25 +148,26 @@ class Music:
         for i in range(len(lst)):
             lst[i] = lst[i]/curr
 
+    def play_wave(self):
+        '''Somehow get the wave file to play from the terminal without the user
+        needing to know how to open the file. '''
+        pass
+
 ### testing for chord sampler and piece sampler
-m = Music()
-C3 = Note('C', 3)
-C4 = Note('C', 4)
-G4 = Note('G', 4)
-E4 = Note('E', 4)
-c_major_triad = Chord(C3, C4, G4, E4)
-c_major_triad.change_beats(4)
-D3 = Note('D', 3)
-D4 = Note('D', 4)
-A4 = Note('A', 4)
-Fs4 = Note('F#', 4)
-d_major_triad = Chord(D3, D4, A4, Fs4)
-d_major_triad.change_beats(4)
-p = Piece(num_measures=2, tempo=60)
-m1 = Measure(4, 4, 60)
-m1.add_chord(c_major_triad)
-m2 = Measure(4,4,60)
-m2.add_chord(d_major_triad)
-p.add_measure(m1)
-p.add_measure(m2)
-m.play_piece(p)
+# m = Music()
+# C3 = Note('C', 3)
+# C4 = Note('C', 4)
+# G4 = Note('G', 4)
+# E4 = Note('E', 4)
+# D3 = Note('D', 3)
+# D4 = Note('D', 4)
+# A4 = Note('A', 4)
+# Fs4 = Note('F#', 4)
+# b = Voice([C3, D3])
+# t = Voice([C4, D4])
+# a = Voice([E4, Fs4])
+# s = Voice([G4, A4])
+# measure = Measure(2, 4, 40, [s,a,t,b])
+# p = Piece(num_measures=1, num_beats = 2, tempo=40)
+# p.add_measure(measure)
+# m.play_piece(p)

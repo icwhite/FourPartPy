@@ -5,6 +5,7 @@ from wave import open
 from struct import Struct
 import numpy as np
 from matplotlib import pyplot as plt
+import subprocess
 import itertools
 
 frame_rate = SAMPLING_RATE
@@ -40,7 +41,6 @@ class Music:
         (See https://docs.python.org/3/library/struct.html)
         """
         i = int(16384 * x)
-        print(i, x)
         return Struct('h').pack(i)
 
     def graph_soundwaves(self, sampler, name="soundwave", seconds=2):
@@ -148,10 +148,11 @@ class Music:
         for i in range(len(lst)):
             lst[i] = lst[i]/curr
 
-    def play_wave(self):
+    def play_wave(self, name):
         '''Somehow get the wave file to play from the terminal without the user
         needing to know how to open the file. '''
-        pass
+        subprocess.run(['open', name])
+
 
 ### testing for chord sampler and piece sampler
 # m = Music()
@@ -171,3 +172,5 @@ class Music:
 # p = Piece(num_measures=1, num_beats = 2, tempo=40)
 # p.add_measure(measure)
 # m.play_piece(p)
+### testing subprocess commands
+# m.play_wave('A440.wav')

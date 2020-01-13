@@ -104,6 +104,14 @@ class Piece:
         output.extend(self.mearures)
         return output
 
+    def play_piece(self, name = 'newpiece.wav'):
+        '''Creates a wave file and plays it without terminal interaction from
+        the user.'''
+        m = Music()
+        m.play_piece(self, name)
+        m.play_wave(name)
+
+
     def get_input(self):
         '''Get input from the user and then store that input in a Piece class'''
         count_measure = 1

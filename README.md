@@ -1,4 +1,15 @@
-## Welcome to GitHub Pages
+# FourPartPy - Terminal Note Entry and Guitar Sound Synthesis with Python
+
+## Guitar Sound Synthesis with Python
+The guitar sound is synthesized with python using the Karplus-Strong Algorithm, modeling a standard low-pass filter. There are two parts, the generation of the wave, and then the successful encryption of that sound wave into a wave file. 
+
+### How Sound Generation Works
+
+### The Encryption Process
+
+## Terminal Note Entry
+
+## How to Access the files
 
 You can use the [editor on GitHub](https://github.com/icwhite/FourPartPy/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
 

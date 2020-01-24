@@ -1,48 +1,14 @@
 # FourPartPy - Terminal Note Entry and Guitar Sound Synthesis with Python
 
-## Guitar Sound Synthesis with Python
-The guitar sound is synthesized with python using the Karplus-Strong Algorithm, modeling a standard low-pass filter. There are two parts, the generation of the wave, and then the successful encryption of that sound wave into a wave file. 
+### Guitar Sound Synthesis with Python
+The guitar sound is synthesized with python using a buffer and the Karplus-Strong Algorithm, modeling a standard low-pass filter. The sound wave is then encrypted in byte form and converted into a wave file.
 
-### How Sound Generation Works
+### Start Composing
+Download the files and then start writing your own music using a terminal entry prompt by running "python3 inputterclass.py" in terminal or the command line. 
 
-### The Encryption Process
+### Further projects from this code
+I want to make a program which will analyze the music that people enter according to the four part writing rules created by Bach. 
 
-## Terminal Note Entry
-
-## How to Access the files
-
-You can use the [editor on GitHub](https://github.com/icwhite/FourPartPy/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
-
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
-
-### Markdown
-
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/icwhite/FourPartPy/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+### Authors
+Isadora White
+May Liu

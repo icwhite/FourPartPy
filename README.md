@@ -10,5 +10,4 @@ Download the files and then start writing your own music using a terminal entry 
 I want to make a program which will analyze the music that people enter according to the four part writing rules created by Bach. 
 
 ### Authors
-Isadora White
-May Liu
+Isadora White, May Liu
